@@ -7,85 +7,81 @@ use Illuminate\Http\Request;
 
 class KategoriController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    // Menampilkan semua kategori
     public function index()
     {
-        // Jika ingin pagination, ganti dengan ->paginate(10)
-        // $kategoris = Kategori::withCount('produk')->latest()->paginate(10);
-        
-        // Jika tidak ingin pagination (seperti sebelumnya)
+        // Ambil semua kategori dengan hitung jumlah produknya
         $kategoris = Kategori::withCount('produk')->latest()->get();
         
+        // Tampilkan halaman daftar kategori
         return view('kategori.index', compact('kategoris'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+    // Form tambah kategori baru
     public function create()
     {
+        // Tampilkan form tambah kategori
         return view('kategori.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    // Simpan kategori baru
     public function store(Request $request)
     {
+        // Validasi input
         $request->validate([
             'nama_kategori' => 'required|string|max:255',
             'deskripsi' => 'nullable|string',
         ]);
 
+        // Simpan ke database
         Kategori::create($request->all());
 
+        // Redirect ke daftar kategori dengan pesan sukses
         return redirect()->route('kategori.index')
-                        ->with('success', 'Kategori berhasil ditambahkan!');
+                         ->with('success', 'Kategori berhasil ditambahkan!');
     }
 
-    /**
-     * Display the specified resource.
-     */
+    // Tampilkan detail kategori
     public function show(Kategori $kategori)
     {
+        // Ambil produk yang terkait dengan kategori
         $kategori->load('produk');
+        
+        // Tampilkan halaman detail
         return view('kategori.show', compact('kategori'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
+    // Form edit kategori
     public function edit(Kategori $kategori)
     {
+        // Tampilkan form edit dengan data kategori
         return view('kategori.edit', compact('kategori'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+    // Update kategori
     public function update(Request $request, Kategori $kategori)
     {
+        // Validasi input
         $request->validate([
             'nama_kategori' => 'required|string|max:255',
             'deskripsi' => 'nullable|string',
         ]);
 
+        // Update data di database
         $kategori->update($request->all());
 
+        // Redirect ke daftar kategori dengan pesan sukses
         return redirect()->route('kategori.index')
                         ->with('success', 'Kategori berhasil diupdate!');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+    // Hapus kategori
     public function destroy(Kategori $kategori)
     {
-        // Hapus kategori
+        // Hapus kategori dari database
         $kategori->delete();
 
+        // Redirect ke daftar kategori dengan pesan sukses
         return redirect()->route('kategori.index')
                         ->with('success', 'Kategori berhasil dihapus!');
     }

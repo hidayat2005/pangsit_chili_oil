@@ -35,7 +35,7 @@ class ProdukController extends Controller
             'deskripsi' => 'required|string',
             'harga' => 'required|numeric|min:0',
             'stok' => 'required|integer|min:0',
-            'kategori_id' => 'required|exists:kategori,id',  // ✅ DIPERBAIKI
+            'kategori_id' => 'required|exists:kategori,id',  
             'status' => 'required|in:tersedia,habis',
             'gambar' => 'required|image|mimes:jpeg,png,jpg|max:2048',
         ]);
@@ -84,7 +84,7 @@ class ProdukController extends Controller
             'deskripsi' => 'required|string',
             'harga' => 'required|numeric|min:0',
             'stok' => 'required|integer|min:0',
-            'kategori_id' => 'required|exists:kategori,id',  // ✅ DIPERBAIKI
+            'kategori_id' => 'required|exists:kategori,id',  
             'status' => 'required|in:tersedia,habis',
             'gambar' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
