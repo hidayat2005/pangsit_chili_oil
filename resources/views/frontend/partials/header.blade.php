@@ -30,9 +30,9 @@
                 </ul>
                 
                 <!-- Right Side Icons -->
-                <div class="navbar-nav align-items-center">
+                <div class="navbar-nav d-flex flex-row align-items-center gap-2">
                     <!-- Cart -->
-                    <a href="{{ route('cart.index') }}" class="nav-link position-relative me-3 cart-icon">
+                    <a href="{{ route('cart.index') }}" class="nav-link position-relative cart-icon">
                         <i class="fas fa-shopping-bag"></i>
                         <span class="cart-badge" id="cart-count">0</span>
                     </a>
@@ -40,10 +40,11 @@
                     <!-- TAMBAHKAN LINK DASHBOARD ADMIN SEBELUM USER DROPDOWN -->
                     @auth
                         @if(auth()->user()->role == 'admin')
-                            <a class="nav-link me-3" href="{{ route('admin.index') }}" 
+                            <a class="nav-link d-flex align-items-center" href="{{ route('admin.index') }}" 
                                style="color: var(--primary-red); font-weight: 600;"
                                title="Dashboard Admin">
-                                <i class="fas fa-tachometer-alt me-1"></i> Dashboard
+                                <i class="fas fa-tachometer-alt me-1"></i>
+                                <span>Dashboard</span>
                             </a>
                         @endif
                     @endauth
@@ -51,10 +52,11 @@
                     <!-- User Auth -->
                     @auth
                     <div class="dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-user-circle me-1"></i> {{ auth()->user()->name }}
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user-circle me-1"></i>
+                            <span>{{ auth()->user()->name }}</span>
                         </a>
-                        <ul class="dropdown-menu">
+                        <ul class="dropdown-menu dropdown-menu-end">
                             <!-- TAMBAHKAN MENU ADMIN JIKA ROLE ADMIN -->
                             @if(auth()->user()->role == 'admin' || auth()->user()->role == 'kasir')
                                 <li><a class="dropdown-item" href="{{ route('admin.index') }}">

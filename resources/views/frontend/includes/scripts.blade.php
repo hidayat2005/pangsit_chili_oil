@@ -8,7 +8,14 @@
 <script>
     // Script umum yang digunakan di semua halaman
     $(document).ready(function() {
-        // Fungsi umum bisa ditaruh di sini
+        // Navbar scroll effect - glassmorphism enhancement
+        $(window).scroll(function() {
+            if ($(this).scrollTop() > 50) {
+                $('.main-header').addClass('scrolled');
+            } else {
+                $('.main-header').removeClass('scrolled');
+            }
+        });
     });
 </script>
 

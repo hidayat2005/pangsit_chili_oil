@@ -21,13 +21,38 @@
         line-height: 1.6;
     }
     
-    /* HEADER & NAVBAR */
+    /* HEADER & NAVBAR - ADVANCED GLASSMORPHISM */
     .main-header {
-        background-color: white;
-        box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+        background: linear-gradient(
+            to bottom,
+            rgba(255, 255, 255, 0.15),
+            rgba(255, 249, 240, 0.12)
+        );
+        backdrop-filter: blur(30px) saturate(200%) brightness(110%);
+        -webkit-backdrop-filter: blur(30px) saturate(200%) brightness(110%);
+        box-shadow: 
+            0 8px 32px 0 rgba(31, 38, 135, 0.08),
+            inset 0 1px 0 0 rgba(255, 255, 255, 0.5);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        border-bottom: 1px solid rgba(220, 53, 69, 0.2);
         position: sticky;
         top: 0;
         z-index: 1000;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    /* Navbar scrolled state - enhanced glass effect */
+    .main-header.scrolled {
+        background: linear-gradient(
+            to bottom,
+            rgba(255, 255, 255, 0.35),
+            rgba(255, 249, 240, 0.3)
+        );
+        backdrop-filter: blur(35px) saturate(220%) brightness(105%);
+        -webkit-backdrop-filter: blur(35px) saturate(220%) brightness(105%);
+        box-shadow: 
+            0 4px 20px rgba(0,0,0,0.12),
+            inset 0 1px 0 0 rgba(255, 255, 255, 0.6);
     }
     
     .navbar-brand {
