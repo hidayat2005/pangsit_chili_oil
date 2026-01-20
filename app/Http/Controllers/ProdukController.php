@@ -23,7 +23,7 @@ class ProdukController extends Controller
                               ->where('stok', '<=', 4)
                               ->count();
     
-    return view('produk.index', compact(
+    return view('admin.produk.index', compact(
         'produks', 
         'totalProduk', 
         'produkTersedia', 
@@ -37,7 +37,7 @@ class ProdukController extends Controller
     public function create()
     {
         $kategoris = Kategori::all();
-        return view('produk.create', compact('kategoris'));
+        return view('admin.produk.create', compact('kategoris'));
     }
 
     // Simpan produk baru DENGAN UPLOAD GAMBAR
@@ -85,14 +85,14 @@ class ProdukController extends Controller
     public function show(Produk $produk)
     {
         $produk->load('kategori');
-        return view('produk.show', compact('produk'));
+        return view('admin.produk.show', compact('produk'));
     }
 
     // Form edit produk
     public function edit(Produk $produk)
     {
         $kategoris = Kategori::all();
-        return view('produk.edit', compact('produk', 'kategoris'));
+        return view('admin.produk.edit', compact('produk', 'kategoris'));
     }
 
     // Update produk DENGAN UPLOAD GAMBAR BARU

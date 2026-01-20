@@ -1,112 +1,160 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Http\Request;
-use App\Http\Controllers\ProdukController;
-use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
-use App\Http\Controllers\PelangganController;
-use App\Http\Controllers\ProfilController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FrontendController;
+use App\Http\Controllers\KategoriController;
+use App\Http\Controllers\PelangganController;
+use App\Http\Controllers\ProdukController;
+use App\Http\Controllers\ProfilController;
 
-// =============== FRONTEND ROUTES ===============
-Route::get('/', function () {
-    $products = \App\Models\Produk::latest()->take(6)->get();
-    $categories = \App\Models\Kategori::all();
-    return view('frontend.pages.home', compact('products', 'categories'));
-})->name('home');
+/*
+|--------------------------------------------------------------------------
+| Web Routes - Pangsit Chili Oil
+|--------------------------------------------------------------------------
+|
+| Route file untuk aplikasi e-commerce Pangsit Chili Oil
+| Organized by: Public Routes → Auth → Customer → Admin
+|
+*/
 
-// Product Routes - Using FrontendController
-Route::get('/produk-front', [FrontendController::class, 'products'])->name('front.products');
-Route::get('/produk/{id}', [FrontendController::class, 'productShow'])->name('front.product.show');
-Route::get('/kategori/{id}/produk', [FrontendController::class, 'productsByCategory'])->name('front.products.category');
+// ============================================================================
+// PUBLIC ROUTES (Accessible by everyone)
+// ============================================================================
 
-// Static Pages
-Route::get('/tentang', function () {
-    return view('frontend.pages.about');
-})->name('about');
+// --- Homepage ---
+Route::get('/', [FrontendController::class, 'home'])->name('home');
 
-Route::get('/kontak', function () {
-    return view('frontend.pages.contact');
-})->name('contact');
+// --- Product Routes ---
+Route::prefix('produk')->name('front.')->group(function () {
+    Route::get('/', [FrontendController::class, 'products'])->name('products');
+    Route::get('/{id}', [FrontendController::class, 'productShow'])->name('product.show');
+});
 
-// =============== CART ROUTES ===============
-Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
-Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
-Route::put('/cart/update/{id}', [CartController::class, 'update'])->name('cart.update');
-Route::delete('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
-Route::post('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
-Route::get('/cart/count', [CartController::class, 'count'])->name('cart.count');
-Route::get('/cart/total', [CartController::class, 'total'])->name('cart.total');
+// --- Category Routes ---
+Route::get('/kategori/{id}/produk', [FrontendController::class, 'productsByCategory'])
+    ->name('front.products.category');
 
-Route::post('/kontak', function () {
-    request()->validate([
-        'name' => 'required|string|min:3',
-        'email' => 'required|email',
-        'subject' => 'required|string',
-        'message' => 'required|string|min:10'
-    ]);
+// --- Static Pages ---
+Route::get('/tentang', [FrontendController::class, 'about'])->name('about');
+Route::get('/kontak', [FrontendController::class, 'contact'])->name('contact');
+Route::post('/kontak', [FrontendController::class, 'contactSubmit'])->name('contact.submit');
 
-    return redirect()->route('contact')
-        ->with('success', 'Terima kasih! Pesan Anda telah dikirim.');
-})->name('contact.submit');
+// ============================================================================
+// SHOPPING CART ROUTES (Public - managed via session)
+// ============================================================================
 
-// =============== AUTH ROUTES ===============
-Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [AuthController::class, 'login']);
-Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::prefix('cart')->name('cart.')->group(function () {
+    Route::get('/', [CartController::class, 'index'])->name('index');
+    Route::post('/add', [CartController::class, 'add'])->name('add');
+    Route::put('/update/{id}', [CartController::class, 'update'])->name('update');
+    Route::delete('/remove/{id}', [CartController::class, 'remove'])->name('remove');
+    Route::post('/clear', [CartController::class, 'clear'])->name('clear');
+    
+    // AJAX endpoints
+    Route::get('/count', [CartController::class, 'count'])->name('count');
+    Route::get('/total', [CartController::class, 'total'])->name('total');
+});
 
-// =============== CUSTOMER/PROFIL ROUTES ===============
-Route::middleware(['auth'])->group(function () {
-    // Route profil (untuk pelanggan isi data sendiri)
+// ============================================================================
+// AUTHENTICATION ROUTES (Guest only)
+// ============================================================================
+
+Route::middleware('guest')->group(function () {
+    // Login
+    Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [AuthController::class, 'login']);
+    
+    // Register
+    Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
+    Route::post('/register', [AuthController::class, 'register']);
+});
+
+// Logout (Authenticated users only)
+Route::post('/logout', [AuthController::class, 'logout'])
+    ->middleware('auth')
+    ->name('logout');
+
+// ============================================================================
+// CUSTOMER ROUTES (Authenticated users)
+// ============================================================================
+
+Route::middleware('auth')->group(function () {
+    
+    // --- Customer Profile ---
+    Route::prefix('profile')->name('customer.')->group(function () {
+        Route::get('/', [ProfilController::class, 'show'])->name('profile');
+        Route::get('/edit', [ProfilController::class, 'edit'])->name('profile.edit');
+        Route::put('/update', [ProfilController::class, 'update'])->name('profile.update');
+    });
+    
+    // --- Customer Orders ---
+    Route::get('/orders', [DashboardController::class, 'orders'])->name('customer.orders');
+    
+    // --- Legacy Profile Routes (Backward compatibility) ---
     Route::get('/profil', [ProfilController::class, 'edit'])->name('profil.edit');
     Route::put('/profil', [ProfilController::class, 'update'])->name('profil.update');
-    
-    // Route customer lainnya
-    Route::get('/profile', function() {
-        return view('frontend.customer.profile');
-    })->name('customer.profile');
-    
-    Route::get('/orders', function() {
-        return view('frontend.customer.orders');
-    })->name('customer.orders');
 });
 
-// =============== ADMIN ROUTES ===============
+// ============================================================================
+// ADMIN PANEL ROUTES (Authenticated users with admin/kasir role)
+// ============================================================================
+
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
-    // DASHBOARD
+    
+    // --- Dashboard ---
+    Route::get('/', [DashboardController::class, 'index'])->name('index');
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     
-    // RUTE UTAMA: /admin → Tampilkan Dashboard
-    Route::get('/', [DashboardController::class, 'index'])->name('index');
-    
-    // CRUD untuk Admin/Kasir
-    Route::resource('users', AdminController::class);
-    
-    // CRUD untuk Kategori
-    Route::resource('kategori', KategoriController::class);
-    
-    // CRUD untuk Produk
+    // --- Product Management (CRUD) ---
     Route::resource('produk', ProdukController::class);
     
-    // RUTE PELANGGAN
-    Route::get('/pelanggan', [PelangganController::class, 'index'])->name('pelanggan.index');
-    Route::get('/pelanggan/{pelanggan}', [PelangganController::class, 'show'])->name('pelanggan.show');
-    Route::delete('/pelanggan/{pelanggan}', [PelangganController::class, 'destroy'])->name('pelanggan.destroy');
+    // --- Category Management (CRUD) ---
+    Route::resource('kategori', KategoriController::class);
+    
+    // --- Customer Management ---
+    Route::prefix('pelanggan')->name('pelanggan.')->group(function () {
+        Route::get('/', [PelangganController::class, 'index'])->name('index');
+        Route::get('/{pelanggan}', [PelangganController::class, 'show'])->name('show');
+        Route::delete('/{pelanggan}', [PelangganController::class, 'destroy'])->name('destroy');
+    });
+    
+    // --- User Management (Admin/Kasir CRUD) ---
+    Route::resource('users', AdminController::class);
 });
 
-// =============== API ROUTES ===============
-Route::get('/api/produk', function() {
-    $products = \App\Models\Produk::with('kategori')->get();
-    return response()->json($products);
+// ============================================================================
+// API ROUTES (JSON responses for AJAX/Mobile app)
+// ============================================================================
+
+Route::prefix('api')->name('api.')->group(function () {
+    
+    // Products API
+    Route::get('/produk', function () {
+        $products = \App\Models\Produk::with('kategori')->get();
+        return response()->json([
+            'success' => true,
+            'data' => $products
+        ]);
+    })->name('products');
+    
+    // Categories API
+    Route::get('/kategori', function () {
+        $categories = \App\Models\Kategori::withCount('produk')->get();
+        return response()->json([
+            'success' => true,
+            'data' => $categories
+        ]);
+    })->name('categories');
 });
 
-Route::get('/api/kategori', function() {
-    $categories = \App\Models\Kategori::withCount('produk')->get();
-    return response()->json($categories);
+// ============================================================================
+// FALLBACK ROUTE (404 handler)
+// ============================================================================
+
+Route::fallback(function () {
+    return response()->view('errors.404', [], 404);
 });

@@ -9,6 +9,24 @@ use Illuminate\Http\Request;
 class FrontendController extends Controller
 {
     /**
+     * Homepage - Landing page
+     */
+    public function home()
+    {
+        $products = Produk::with('kategori')
+            ->where('status', 'tersedia')
+            ->latest()
+            ->take(6)
+            ->get();
+            
+        $categories = Kategori::withCount(['produk' => function($query) {
+            $query->where('status', 'tersedia');
+        }])->get();
+        
+        return view('frontend.pages.home', compact('products', 'categories'));
+    }
+    
+    /**
      * Menampilkan daftar produk dengan filter, search, dan sort
      */
     public function products(Request $request)
@@ -121,4 +139,40 @@ class FrontendController extends Controller
         
         return view('frontend.products.index', compact('products', 'categories', 'category'));
     }
+    
+    /**
+     * Halaman Tentang Kami
+     */
+    public function about()
+    {
+        return view('frontend.pages.about');
+    }
+    
+    /**
+     * Halaman Kontak
+     */
+    public function contact()
+    {
+        return view('frontend.pages.contact');
+    }
+    
+    /**
+     * Submit form kontak
+     */
+    public function contactSubmit(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|min:3',
+            'email' => 'required|email',
+            'subject' => 'required|string',
+            'message' => 'required|string|min:10'
+        ]);
+        
+        // TODO: Implement email sending or save to database
+        // Mail::to('admin@pangsitchilioil.com')->send(new ContactMessage($request->all()));
+        
+        return redirect()->route('contact')
+            ->with('success', 'Terima kasih! Pesan Anda telah dikirim.');
+    }
 }
+

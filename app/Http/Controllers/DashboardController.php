@@ -11,6 +11,9 @@ use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
+    /**
+     * Admin Dashboard
+     */
     public function index()
     {
         // STATISTIK PELANGGAN
@@ -86,7 +89,7 @@ class DashboardController extends Controller
                                  ->take(5)
                                  ->get();
         
-        return view('dashboard.index', compact(
+        return view('admin.dashboard.index', compact(
             // Pelanggan
             'totalPelanggan', 'pelangganAktif',
             
@@ -105,5 +108,15 @@ class DashboardController extends Controller
             // Data Terbaru
             'produkTerbaru', 'pelangganTerbaru', 'kategoriTerbaru'
         ));
+    }
+    
+    /**
+     * Customer Orders Page
+     */
+    public function orders()
+    {
+        // Get customer orders
+        // TODO: Implement when Pesanan model has customer relationship
+        return view('frontend.customer.orders');
     }
 }

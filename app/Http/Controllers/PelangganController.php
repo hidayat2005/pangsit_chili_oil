@@ -17,13 +17,13 @@ class PelangganController extends Controller
         $pelangganAktif = Pelanggan::whereHas('user')->count();
         $totalPesanan = \App\Models\Pesanan::count();
 
-        return view('pelanggan.index', compact('pelanggans', 'totalPelanggan', 'pelangganAktif', 'totalPesanan'));
+        return view('admin.pelanggan.index', compact('pelanggans', 'totalPelanggan', 'pelangganAktif', 'totalPesanan'));
     }
 
     public function show(Pelanggan $pelanggan)
     {
         $pelanggan->load(['user', 'pesanan']);
-        return view('pelanggan.show', compact('pelanggan'));
+        return view('admin.pelanggan.show', compact('pelanggan'));
     }
 
     public function destroy(Pelanggan $pelanggan)

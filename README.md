@@ -1,59 +1,266 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🌶️ Pangsit Chili Oil - E-Commerce Platform
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Platform e-commerce untuk penjualan Pangsit Chili Oil dengan sistem admin panel dan keranjang belanja.
 
-## About Laravel
+![Laravel](https://img.shields.io/badge/Laravel-11.x-red?logo=laravel)
+![PHP](https://img.shields.io/badge/PHP-8.x-blue?logo=php)
+![SQLite](https://img.shields.io/badge/Database-SQLite-green?logo=sqlite)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 📋 Daftar Isi
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- [Tentang Project](#-tentang-project)
+- [Fitur Utama](#-fitur-utama)
+- [Teknologi](#-teknologi)
+- [Struktur Folder](#-struktur-folder)
+- [Instalasi](#-instalasi)
+- [Penggunaan](#-penggunaan)
+- [Dokumentasi](#-dokumentasi)
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## 🎯 Tentang Project
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Project ini adalah sistem e-commerce untuk **Pangsit Chili Oil** yang dibangun menggunakan Laravel 11. Sistem ini memiliki dua interface utama:
+- **Frontend**: Interface untuk customer (katalog produk, keranjang, checkout)
+- **Admin Panel**: Interface untuk admin (manajemen produk, kategori, pesanan)
 
-## Laravel Sponsors
+**Mata Kuliah**: MPPL & PBKK  
+**Tahun**: 2025
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+---
 
-### Premium Partners
+## ✨ Fitur Utama
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### 🛒 Frontend (Customer)
+- ✅ Homepage dengan hero section
+- ✅ Katalog produk dengan filter kategori
+- ✅ Detail produk
+- ✅ Keranjang belanja (Cart) dengan AJAX
+- ✅ Checkout & Pembayaran
+- ✅ Autentikasi (Login/Register)
+- ✅ Profil pelanggan
+- ✅ Riwayat pesanan
+- ✅ **Navbar dengan Glassmorphism Effect** 🎨
 
-## Contributing
+### 🔧 Admin Panel
+- ✅ Dashboard admin
+- ✅ Manajemen Produk (CRUD)
+- ✅ Manajemen Kategori (CRUD)
+- ✅ Manajemen Pelanggan
+- ✅ Monitoring Pesanan
+- ✅ Quick access icons
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+---
 
-## Code of Conduct
+## 🛠️ Teknologi
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+| Kategori | Teknologi |
+|----------|-----------|
+| **Backend** | Laravel 11.x |
+| **Frontend** | Blade Templates, Bootstrap 5 |
+| **Database** | SQLite |
+| **Authentication** | Laravel Auth |
+| **Package Manager** | Composer |
+| **CSS Framework** | Bootstrap 5 + Custom CSS |
+| **Icons** | Font Awesome |
+| **Fonts** | Google Fonts (Poppins, Montserrat) |
 
-## Security Vulnerabilities
+---
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## 📁 Struktur Folder
 
-## License
+Struktur folder mengikuti **pola MVC Laravel**:
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```
+pangsit_chili_oil/
+├── app/
+│   ├── Http/Controllers/      # Logic aplikasi
+│   │   ├── AdminController.php
+│   │   ├── AuthController.php
+│   │   ├── CartController.php
+│   │   ├── FrontendController.php
+│   │   ├── KategoriController.php
+│   │   ├── ProdukController.php
+│   │   └── ...
+│   └── Models/                 # Database models
+│       ├── Produk.php
+│       ├── Kategori.php
+│       ├── Pesanan.php
+│       └── ...
+├── database/
+│   ├── migrations/             # Database schema
+│   └── seeders/                # Data awal
+├── resources/views/
+│   ├── frontend/               # Tampilan customer
+│   │   ├── pages/              # Halaman utama
+│   │   ├── partials/           # Components (header, footer)
+│   │   ├── includes/           # Styles & scripts
+│   │   └── products/           # Product views
+│   └── admin/                  # Tampilan admin
+├── routes/
+│   └── web.php                 # Route definitions
+└── public/                     # Public assets
+```
+
+> 📚 **Dokumentasi lengkap**: Lihat file [`STRUCTURE.md`](./STRUCTURE.md) untuk penjelasan detail struktur folder
+
+---
+
+## 🚀 Instalasi
+
+### Prasyarat
+- PHP >= 8.1
+- Composer
+- SQLite (atau MySQL/PostgreSQL)
+
+### Langkah-Langkah
+
+1. **Clone repository**
+   ```bash
+   git clone <repository-url>
+   cd pangsit_chili_oil
+   ```
+
+2. **Install dependencies**
+   ```bash
+   composer install
+   ```
+
+3. **Copy file environment**
+   ```bash
+   copy .env.example .env
+   ```
+
+4. **Generate application key**
+   ```bash
+   php artisan key:generate
+   ```
+
+5. **Setup database**
+   
+   Buat file database SQLite:
+   ```bash
+   touch database/database.sqlite
+   ```
+   
+   Edit `.env`:
+   ```env
+   DB_CONNECTION=sqlite
+   DB_DATABASE=C:\path\to\database\database.sqlite
+   ```
+
+6. **Run migrations & seeders**
+   ```bash
+   php artisan migrate:fresh --seed
+   ```
+
+7. **Run development server**
+   ```bash
+   php artisan serve
+   ```
+
+8. **Akses aplikasi**
+   - Frontend: http://localhost:8000
+   - Admin Panel: http://localhost:8000/admin
+
+---
+
+## 👤 Default Credentials
+
+Setelah menjalankan seeder, gunakan kredensial berikut:
+
+### Admin
+- **Email**: admin@pangsitchilioil.com
+- **Password**: admin123
+
+### Customer (Testing)
+- **Email**: customer@example.com
+- **Password**: password
+
+> 📝 **Catatan**: Lihat file `CREDENTIALS.md` untuk kredensial lengkap
+
+---
+
+## 📖 Penggunaan
+
+### Menjalankan Server
+```bash
+php artisan serve
+```
+
+### Clear Cache
+```bash
+php artisan cache:clear
+php artisan view:clear
+php artisan config:clear
+```
+
+### Reset Database
+```bash
+php artisan migrate:fresh --seed
+```
+
+### Lihat Semua Routes
+```bash
+php artisan route:list
+```
+
+---
+
+## 📚 Dokumentasi
+
+| File | Deskripsi |
+|------|-----------|
+| `CREDENTIALS.md` | Kredensial login untuk testing |
+| `STRUCTURE.md` | Dokumentasi lengkap struktur folder |
+| `.env.example` | Template environment variables |
+
+---
+
+## 🎨 Fitur CSS Kustom
+
+- **Glassmorphism Navbar**: Background transparan dengan blur effect
+- **Gradient Buttons**: Tombol dengan gradient merah-orange
+- **Hover Animations**: Animasi smooth pada cards dan buttons
+- **Responsive Design**: Mobile-friendly layout
+- **Custom Color Scheme**: Red-Orange-Yellow theme
+
+---
+
+## 🛡️ Security
+
+- Authentication menggunakan Laravel default
+- CSRF protection pada semua form
+- Password hashing dengan bcrypt
+- XSS protection
+- SQL injection prevention (Eloquent ORM)
+
+---
+
+## 📞 Kontak & Support
+
+Jika ada pertanyaan atau issue:
+1. Cek dokumentasi di folder `docs/`
+2. Lihat `storage/logs/laravel.log` untuk error
+3. Contact developer team
+
+---
+
+## 📝 License
+
+Project ini dibuat untuk keperluan **tugas kuliah MPPL & PBKK**.
+
+---
+
+## 🙏 Credits
+
+- **Framework**: [Laravel](https://laravel.com)
+- **CSS Framework**: [Bootstrap 5](https://getbootstrap.com)
+- **Icons**: [Font Awesome](https://fontawesome.com)
+- **Fonts**: [Google Fonts](https://fonts.google.com)
+
+---
+
+**Dibuat dengan ❤️ untuk tugas MPPL & PBKK**

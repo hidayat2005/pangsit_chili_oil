@@ -28,7 +28,7 @@ class KategoriController extends Controller
         // Hitung rata-rata produk per kategori
         $rataRataProduk = $totalKategori > 0 ? $totalProduk / $totalKategori : 0;
         
-        return view('kategori.index', compact(
+        return view('admin.kategori.index', compact(
             'kategoris',
             'totalKategori',
             'totalProduk',
@@ -42,7 +42,7 @@ class KategoriController extends Controller
     public function create()
     {
         // Tampilkan form tambah kategori
-        return view('kategori.create');
+        return view('admin.kategori.create');
     }
 
     // Simpan kategori baru
@@ -69,14 +69,14 @@ class KategoriController extends Controller
         $kategori->load('produk');
         
         // Tampilkan halaman detail
-        return view('kategori.show', compact('kategori'));
+        return view('admin.kategori.show', compact('kategori'));
     }
 
     // Form edit kategori
     public function edit(Kategori $kategori)
     {
         // Tampilkan form edit dengan data kategori
-        return view('kategori.edit', compact('kategori'));
+        return view('admin.kategori.edit', compact('kategori'));
     }
 
     // Update kategori

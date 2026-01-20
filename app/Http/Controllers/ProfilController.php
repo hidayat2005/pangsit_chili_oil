@@ -8,7 +8,27 @@ use Illuminate\Support\Facades\Auth;
 
 class ProfilController extends Controller
 {
-    // Tampilkan form profil
+    /**
+     * Tampilkan profil customer (read-only view)
+     */
+    public function show()
+    {
+        $pelanggan = Pelanggan::firstOrCreate(
+            ['user_id' => Auth::id()],
+            [
+                'nama_pelanggan' => Auth::user()->name,
+                'email' => Auth::user()->email,
+                'nomor_telepon' => '',
+                'alamat' => ''
+            ]
+        );
+        
+        return view('frontend.customer.profile', compact('pelanggan'));
+    }
+    
+    /**
+     * Tampilkan form edit profil
+     */
     public function edit()
     {
         // Ambil atau buat data pelanggan untuk user yang login
@@ -25,7 +45,9 @@ class ProfilController extends Controller
         return view('profil.edit', compact('pelanggan'));
     }
 
-    // Update profil pelanggan
+    /**
+     * Update profil pelanggan
+     */
     public function update(Request $request)
     {
         $validated = $request->validate([
