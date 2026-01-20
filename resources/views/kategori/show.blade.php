@@ -10,7 +10,7 @@
                 <div class="card-header">
                     <div class="d-flex justify-content-between align-items-center">
                         <h4>Detail Kategori</h4>
-                        <a href="{{ route('kategori.index') }}" class="btn btn-secondary">Kembali</a>
+                        <a href="{{ route('admin.kategori.index') }}" class="btn btn-secondary">Kembali</a>
                     </div>
                 </div>
                 <div class="card-body">
@@ -38,8 +38,8 @@
                     </table>
 
                     <div class="mt-3">
-                        <a href="{{ route('kategori.edit', $kategori->id) }}" class="btn btn-warning">Edit</a>
-                        <form action="{{ route('kategori.destroy', $kategori->id) }}" method="POST" style="display: inline;">
+                        <a href="{{ route('admin.kategori.edit', $kategori->id) }}" class="btn btn-warning">Edit</a>
+                        <form action="{{ route('admin.kategori.destroy', $kategori->id) }}" method="POST" style="display: inline;">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-danger" onclick="return confirm('Hapus kategori?')">Hapus</button>

@@ -3,15 +3,30 @@
 @section('title', 'Tambah Kategori')
 
 @section('content')
-<div class="container">
-    <div class="row">
-        <div class="col-md-12">
+<div class="row justify-content-center">
+    <div class="col-lg-10">
             <div class="card">
                 <div class="card-header">
-                    <h4>Tambah Kategori</h4>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Tambah Kategori</h5>
+                        <a href="{{ route('admin.kategori.index') }}" class="btn btn-outline-secondary btn-sm">
+                            <i class="fas fa-arrow-left"></i> Kembali
+                        </a>
+                    </div>
                 </div>
+                
                 <div class="card-body">
-                    <form action="{{ route('kategori.store') }}" method="POST">
+                    @if($errors->any())
+                        <div class="alert alert-danger mb-4">
+                            <ul class="mb-0">
+                                @foreach($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
+                    <form action="{{ route('admin.kategori.store') }}" method="POST">
                         @csrf
                         <div class="mb-3">
                             <label for="nama_kategori" class="form-label">Nama Kategori</label>
@@ -31,8 +46,10 @@
                             @enderror
                         </div>
 
-                        <div class="d-flex justify-content-between">
-                            <a href="{{ route('kategori.index') }}" class="btn btn-secondary">Kembali</a>
+                        <div class="d-flex justify-content-between mt-4">
+                            <a href="{{ route('admin.kategori.index') }}" class="btn btn-outline-secondary">
+                                <i class="fas fa-times me-1"></i> Batal
+                            </a>
                             <button type="submit" class="btn btn-primary">Simpan</button>
                         </div>
                     </form>

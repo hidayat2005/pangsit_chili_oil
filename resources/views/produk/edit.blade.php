@@ -3,21 +3,20 @@
 @section('title', 'Edit Produk')
 
 @section('content')
-<div class="container py-4">
     <div class="row justify-content-center">
         <div class="col-lg-10">
             <div class="card">
                 <div class="card-header">
                     <div class="d-flex justify-content-between align-items-center">
                         <h5 class="mb-0">Edit Produk</h5>
-                        <a href="{{ route('produk.index') }}" class="btn btn-outline-secondary btn-sm">
+                        <a href="{{ route('admin.produk.index') }}" class="btn btn-outline-secondary btn-sm">
                             <i class="fas fa-arrow-left"></i> Kembali
                         </a>
                     </div>
                 </div>
                 
                 <div class="card-body">
-                    <form action="{{ route('produk.update', $produk->id) }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('admin.produk.update', $produk->id) }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
                         
@@ -141,7 +140,7 @@
 
                         <!-- Tombol Aksi -->
                         <div class="d-flex justify-content-between mt-4">
-                            <a href="{{ route('produk.show', $produk->id) }}" class="btn btn-outline-info">
+                            <a href="{{ route('admin.produk.show', $produk->id) }}" class="btn btn-outline-info">
                                 <i class="fas fa-eye me-1"></i> Detail
                             </a>
                             <button type="submit" class="btn btn-primary">

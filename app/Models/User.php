@@ -2,21 +2,52 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
-class User extends Model
+class User extends Authenticatable
 {
-    use HasFactory;
+    use Notifiable;
 
-    // Tambahkan relasi jika diperlukan
-    public function pesanan()
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+        'role'
+    ];
+
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
+        'role' => 'string'
+    ];
+
+    // Relasi ke pelanggan
+    public function pelanggan()
     {
-        return $this->hasMany(Pesanan::class);
+        return $this->hasOne(Pelanggan::class);
     }
 
-    public function produk()
+    // Cek apakah admin
+    public function isAdmin()
     {
-        return $this->hasMany(Produk::class);
+        return $this->role === 'admin';
+    }
+
+    // Cek apakah kasir
+    public function isKasir()
+    {
+        return $this->role === 'kasir';
+    }
+
+    // Cek apakah customer
+    public function isCustomer()
+    {
+        return $this->role === 'customer';
     }
 }

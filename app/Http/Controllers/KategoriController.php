@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Kategori;
+use App\Models\Produk;
 use Illuminate\Http\Request;
 
 class KategoriController extends Controller
@@ -13,8 +14,28 @@ class KategoriController extends Controller
         // Ambil semua kategori dengan hitung jumlah produknya
         $kategoris = Kategori::withCount('produk')->latest()->get();
         
-        // Tampilkan halaman daftar kategori
-        return view('kategori.index', compact('kategoris'));
+        // Hitung statistik
+        $totalKategori = Kategori::count();
+        $totalProduk = Produk::count();
+        
+        // Hitung kategori terpopuler (paling banyak produk)
+        $kategoriTerpopuler = Kategori::withCount('produk')
+            ->orderBy('produk_count', 'desc')
+            ->first();
+        
+        $produkTerbanyak = $kategoriTerpopuler ? $kategoriTerpopuler->produk_count : 0;
+        
+        // Hitung rata-rata produk per kategori
+        $rataRataProduk = $totalKategori > 0 ? $totalProduk / $totalKategori : 0;
+        
+        return view('kategori.index', compact(
+            'kategoris',
+            'totalKategori',
+            'totalProduk',
+            'kategoriTerpopuler',
+            'produkTerbanyak',
+            'rataRataProduk'
+        ));
     }
 
     // Form tambah kategori baru
@@ -36,8 +57,8 @@ class KategoriController extends Controller
         // Simpan ke database
         Kategori::create($request->all());
 
-        // Redirect ke daftar kategori dengan pesan sukses
-        return redirect()->route('kategori.index')
+        // PERBAIKI SUDAH: route('admin.kategori.index')
+        return redirect()->route('admin.kategori.index')
                          ->with('success', 'Kategori berhasil ditambahkan!');
     }
 
@@ -70,8 +91,8 @@ class KategoriController extends Controller
         // Update data di database
         $kategori->update($request->all());
 
-        // Redirect ke daftar kategori dengan pesan sukses
-        return redirect()->route('kategori.index')
+        // PERBAIKI INI: route('kategori.index') → route('admin.kategori.index')
+        return redirect()->route('admin.kategori.index')
                         ->with('success', 'Kategori berhasil diupdate!');
     }
 
@@ -81,8 +102,8 @@ class KategoriController extends Controller
         // Hapus kategori dari database
         $kategori->delete();
 
-        // Redirect ke daftar kategori dengan pesan sukses
-        return redirect()->route('kategori.index')
+        // PERBAIKI INI: route('kategori.index') → route('admin.kategori.index')
+        return redirect()->route('admin.kategori.index')
                         ->with('success', 'Kategori berhasil dihapus!');
     }
 }

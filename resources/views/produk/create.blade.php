@@ -3,21 +3,20 @@
 @section('title', 'Tambah Produk')
 
 @section('content')
-<div class="container py-4">
     <div class="row justify-content-center">
         <div class="col-lg-10">
             <div class="card">
                 <div class="card-header">
                     <div class="d-flex justify-content-between align-items-center">
                         <h5 class="mb-0">Tambah Produk Baru</h5>
-                        <a href="{{ route('produk.index') }}" class="btn btn-outline-secondary btn-sm">
+                        <a href="{{ route('admin.produk.index') }}" class="btn btn-outline-secondary btn-sm">
                             <i class="fas fa-arrow-left"></i> Kembali
                         </a>
                     </div>
                 </div>
                 
                 <div class="card-body">
-                    <!-- Error Messages -->
+                    
                     @if($errors->any())
                         <div class="alert alert-danger mb-4">
                             <ul class="mb-0">
@@ -28,7 +27,7 @@
                         </div>
                     @endif
 
-                    <form action="{{ route('produk.store') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('admin.produk.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         
                         <div class="row">
@@ -146,7 +145,7 @@
 
                         <!-- Tombol Aksi -->
                         <div class="d-flex justify-content-between mt-4">
-                            <a href="{{ route('produk.index') }}" class="btn btn-outline-secondary">
+                            <a href="{{ route('admin.produk.index') }}" class="btn btn-outline-secondary">
                                 <i class="fas fa-times me-1"></i> Batal
                             </a>
                             <button type="submit" class="btn btn-primary">
@@ -185,4 +184,4 @@
         }
     });
 </script>
-@endsection
+@endsection                           

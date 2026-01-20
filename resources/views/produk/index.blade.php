@@ -3,7 +3,6 @@
 @section('title', 'Manajemen Produk')
 
 @section('content')
-<div class="container-fluid py-4">
     <!-- Header -->
     <div class="row mb-4">
         <div class="col">
@@ -12,20 +11,80 @@
                     <h3 class="mb-1">Daftar Produk</h3>
                     <p class="text-muted mb-0">Kelola produk Pangsit Chili Oil</p>
                 </div>
-                <a href="{{ route('produk.create') }}" class="btn btn-primary">
+                <a href="{{ route('admin.produk.create') }}" class="btn btn-primary">
                     <i class="fas fa-plus me-1"></i>Tambah Produk
                 </a>
             </div>
         </div>
     </div>
 
-    <!-- HANYA SATU NOTIFIKASI DISINI -->
-    @if(session('success'))
-        <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
-            <i class="fas fa-check-circle me-2"></i>{{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+<!-- Statistik Produk -->
+<div class="row mb-4">
+    <div class="col-md-3 mb-3">
+        <div class="card bg-primary text-white h-100">
+            <div class="card-body d-flex flex-column justify-content-between">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <h6 class="mb-2">Total Produk</h6>
+                        <h2 class="mb-0">{{ $totalProduk }}</h2>
+                    </div>
+                    <i class="fas fa-box fa-2x opacity-75"></i>
+                </div>
+                <small class="opacity-75 mt-2">
+                    Jumlah semua produk
+                </small>
+            </div>
         </div>
-    @endif
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card bg-success text-white h-100">
+            <div class="card-body d-flex flex-column justify-content-between">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <h6 class="mb-2">Tersedia</h6>
+                        <h2 class="mb-0">{{ $produkTersedia }}</h2>
+                    </div>
+                    <i class="fas fa-check-circle fa-2x opacity-75"></i>
+                </div>
+                <small class="opacity-75 mt-2">
+                    Produk tersedia
+                </small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card bg-warning text-white h-100">
+            <div class="card-body d-flex flex-column justify-content-between">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <h6 class="mb-2">Stok Rendah</h6>
+                        <h2 class="mb-0">{{ $produkStokRendah }}</h2>
+                    </div>
+                    <i class="fas fa-exclamation-triangle fa-2x opacity-75"></i>
+                </div>
+                <small class="opacity-75 mt-2">
+                    Perlu restock
+                </small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card bg-danger text-white h-100">
+            <div class="card-body d-flex flex-column justify-content-between">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <h6 class="mb-2">Habis</h6>
+                        <h2 class="mb-0">{{ $produkHabis }}</h2>
+                    </div>
+                    <i class="fas fa-times-circle fa-2x opacity-75"></i>
+                </div>
+                <small class="opacity-75 mt-2">
+                    Stok habis
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
 
     <!-- Main Content -->
     <div class="row">
@@ -48,8 +107,6 @@
 
                 <!-- Card Body -->
                 <div class="card-body p-0">
-                    <!-- HAPUS NOTIFIKASI DISINI -->
-                    
                     <div class="table-responsive">
                         <table class="table table-hover mb-0">
                             <thead class="table-light">
@@ -72,15 +129,24 @@
                                     </td>
                                     <td class="px-4 py-3 align-middle">
                                         @if($produk->gambar)
-                                            <img src="{{ asset('storage/' . $produk->gambar) }}" 
-                                                 alt="{{ $produk->nama_produk }}" 
-                                                 class="rounded" 
-                                                 style="width: 50px; height: 50px; object-fit: cover;">
+                                            <div style="position: relative;">
+                                                <!-- Gambar sederhana -->
+                                                <img src="{{ asset('storage/' . $produk->gambar) }}" 
+                                                     alt="{{ $produk->nama_produk }}" 
+                                                     class="rounded border" 
+                                                     style="width: 60px; height: 60px; object-fit: cover; cursor: pointer;"
+                                                     data-bs-toggle="tooltip" 
+                                                     title="Klik untuk lihat besar"
+                                                     onerror="this.onerror=null; this.src='https://via.placeholder.com/60x60/cccccc/ffffff?text=No+Image';">
+                                            </div>
                                         @else
                                             <div class="bg-light rounded d-flex align-items-center justify-content-center" 
-                                                 style="width: 50px; height: 50px;">
+                                                 style="width: 60px; height: 60px;">
                                                 <i class="fas fa-image text-muted"></i>
                                             </div>
+                                            <small class="text-muted mt-1" style="font-size: 8px;">
+                                                No Image
+                                            </small>
                                         @endif
                                     </td>
                                     <td class="px-4 py-3 align-middle">
@@ -105,7 +171,7 @@
                                         </div>
                                     </td>
                                     <td class="px-4 py-3 align-middle">
-                                        <span class="badge {{ $produk->stok > 10 ? 'bg-success' : ($produk->stok > 0 ? 'bg-warning' : 'bg-danger') }}">
+                                        <span class="badge {{ $produk->stok > 4 ? 'bg-success' : ($produk->stok > 0 ? 'bg-warning' : 'bg-danger') }}">
                                             {{ $produk->stok }}
                                         </span>
                                     </td>
@@ -116,17 +182,17 @@
                                     </td>
                                     <td class="px-4 py-3 align-middle text-center">
                                         <div class="btn-group btn-group-sm">
-                                            <a href="{{ route('produk.show', $produk->id) }}" 
+                                            <a href="{{ route('admin.produk.show', $produk->id) }}" 
                                                class="btn btn-outline-info px-3" 
                                                title="Detail">
                                                 <i class="fas fa-eye"></i>
                                             </a>
-                                            <a href="{{ route('produk.edit', $produk->id) }}" 
+                                            <a href="{{ route('admin.produk.edit', $produk->id) }}" 
                                                class="btn btn-outline-warning px-3" 
                                                title="Edit">
                                                 <i class="fas fa-edit"></i>
                                             </a>
-                                            <form action="{{ route('produk.destroy', $produk->id) }}" method="POST" 
+                                            <form action="{{ route('admin.produk.destroy', $produk->id) }}" method="POST" 
                                                   class="d-inline">
                                                 @csrf
                                                 @method('DELETE')
@@ -147,7 +213,7 @@
                                             <i class="fas fa-box fa-3x text-muted mb-3"></i>
                                             <h5 class="text-muted">Belum ada produk</h5>
                                             <p class="text-muted mb-4">Mulai dengan menambahkan produk pertama Anda</p>
-                                            <a href="{{ route('produk.create') }}" class="btn btn-primary">
+                                            <a href="{{ route('admin.produk.create') }}" class="btn btn-primary">
                                                 <i class="fas fa-plus me-2"></i>Tambah Produk
                                             </a>
                                         </div>
@@ -180,11 +246,12 @@
             </div>
         </div>
     </div>
-</div>
+@endsection
 
+@section('scripts')
 <script>
-    // Script sederhana untuk konfirmasi hapus
     document.addEventListener('DOMContentLoaded', function() {
+        // Konfirmasi hapus
         const deleteForms = document.querySelectorAll('form[action*="destroy"]');
         deleteForms.forEach(form => {
             form.addEventListener('submit', function(e) {
@@ -192,6 +259,12 @@
                     e.preventDefault();
                 }
             });
+        });
+        
+        // Tooltips
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
         });
     });
 </script>

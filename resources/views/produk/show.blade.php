@@ -3,11 +3,10 @@
 @section('title', 'Detail Produk')
 
 @section('content')
-<div class="container py-4">
     <!-- Header -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h4>Detail Produk</h4>
-        <a href="{{ route('produk.index') }}" class="btn btn-outline-secondary btn-sm">
+        <a href="{{ route('admin.produk.index') }}" class="btn btn-outline-secondary btn-sm">
             <i class="fas fa-arrow-left"></i> Kembali
         </a>
     </div>
@@ -106,11 +105,11 @@
 
             <!-- Tombol Aksi -->
             <div class="d-flex justify-content-between">
-                <a href="{{ route('produk.edit', $produk->id) }}" class="btn btn-warning px-4">
+                <a href="{{ route('admin.produk.edit', $produk->id) }}" class="btn btn-warning px-4">
                     <i class="fas fa-edit me-2"></i> Edit
                 </a>
                 
-                <form action="{{ route('produk.destroy', $produk->id) }}" method="POST">
+                <form action="{{ route('admin.produk.destroy', $produk->id) }}" method="POST">
                     @csrf
                     @method('DELETE')
                     <button type="submit" class="btn btn-danger px-4" 

@@ -10,11 +10,14 @@ return new class extends Migration
     {
         Schema::create('pelanggan', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('user_id')->nullable()->unique();
             $table->string('nama_pelanggan');
             $table->string('nomor_telepon');
             $table->text('alamat');
             $table->string('email')->nullable();
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

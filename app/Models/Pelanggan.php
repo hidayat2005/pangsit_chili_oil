@@ -13,6 +13,7 @@ class Pelanggan extends Model
     protected $table = 'pelanggan';
 
     protected $fillable = [
+        'user_id',
         'nama_pelanggan',
         'nomor_telepon',
         'alamat',
@@ -21,6 +22,12 @@ class Pelanggan extends Model
 
     // Nonaktifkan timestamps jika tidak perlu
     public $timestamps = true;
+
+    //relasi ke User
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     // Relasi ke pesanan
     public function pesanan()

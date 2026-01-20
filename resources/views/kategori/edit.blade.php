@@ -11,7 +11,7 @@
                     <h4>Edit Kategori</h4>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('kategori.update', $kategori->id) }}" method="POST">
+                    <form action="{{ route('admin.kategori.update', $kategori->id) }}" method="POST">
                         @csrf
                         @method('PUT')
                         <div class="mb-3">
@@ -33,9 +33,13 @@
                             @enderror
                         </div>
 
-                        <div class="d-flex justify-content-between">
-                            <a href="{{ route('kategori.index') }}" class="btn btn-secondary">Kembali</a>
-                            <button type="submit" class="btn btn-primary">Update</button>
+                        <div class="d-flex justify-content-between mt-4">
+                            <a href="{{ route('admin.kategori.show', $kategori->id) }}" class="btn btn-outline-info">
+                                <i class="fas fa-eye me-1"></i> Detail
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-1"></i> Simpan Perubahan
+                            </button>
                         </div>
                     </form>
                 </div>

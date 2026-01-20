@@ -16,7 +16,21 @@ class ProdukController extends Controller
                         ->latest()
                         ->paginate(10);
         
-        return view('produk.index', compact('produks'));
+        $totalProduk = Produk::count();
+    $produkTersedia = Produk::where('status', 'tersedia')->count();
+    $produkHabis = Produk::where('status', 'habis')->count();
+    $produkStokRendah = Produk::where('stok', '>', 0)
+                              ->where('stok', '<=', 4)
+                              ->count();
+    
+    return view('produk.index', compact(
+        'produks', 
+        'totalProduk', 
+        'produkTersedia', 
+        'produkHabis', 
+        'produkStokRendah'
+    ));
+    
     }
 
     // Form tambah produk
@@ -26,7 +40,7 @@ class ProdukController extends Controller
         return view('produk.create', compact('kategoris'));
     }
 
-    // Simpan produk baru
+    // Simpan produk baru DENGAN UPLOAD GAMBAR
     public function store(Request $request)
     {
         // Validasi input
@@ -37,15 +51,21 @@ class ProdukController extends Controller
             'stok' => 'required|integer|min:0',
             'kategori_id' => 'required|exists:kategori,id',  
             'status' => 'required|in:tersedia,habis',
-            'gambar' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'gambar' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
 
-        // Upload gambar
-        if ($request->hasFile('gambar')) {
-            $path = $request->file('gambar')->store('produk', 'public');
-        }
+    if ($request->hasFile('gambar')) {
+        $file = $request->file('gambar');
+        
+        // 1. Buat nama file unik
+        $fileName = 'produk_' . time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+        
+        // 2. Simpan ke storage (BUKAN public)
+        $path = $file->storeAs('produk', $fileName, 'public');
+        // Hasil: "produk/produk_123456789_abc123.jpg"
+    }
 
-        // Simpan produk
+        // Simpan produk ke database
         Produk::create([
             'nama_produk' => $request->nama_produk,
             'deskripsi' => $request->deskripsi,
@@ -53,11 +73,11 @@ class ProdukController extends Controller
             'stok' => $request->stok,
             'kategori_id' => $request->kategori_id,
             'status' => $request->status,
-            'gambar' => $path ?? null,
+            'gambar' => $path, // Simpan path gambar ke database
         ]);
 
         return redirect()
-            ->route('produk.index')
+            ->route('admin.produk.index')
             ->with('success', 'Produk berhasil ditambahkan!');
     }
 
@@ -75,7 +95,7 @@ class ProdukController extends Controller
         return view('produk.edit', compact('produk', 'kategoris'));
     }
 
-    // Update produk
+    // Update produk DENGAN UPLOAD GAMBAR BARU
     public function update(Request $request, Produk $produk)
     {
         // Validasi input
@@ -86,47 +106,48 @@ class ProdukController extends Controller
             'stok' => 'required|integer|min:0',
             'kategori_id' => 'required|exists:kategori,id',  
             'status' => 'required|in:tersedia,habis',
-            'gambar' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
 
-        $data = $request->all();
+        $data = $request->except('gambar');
 
-        // Upload gambar baru jika ada
+        // UPLOAD GAMBAR BARU JIKA ADA
         if ($request->hasFile('gambar')) {
-            // Hapus gambar lama
-            if ($produk->gambar) {
-                Storage::delete('public/' . $produk->gambar);
+            // 1. Hapus gambar lama jika ada
+            if ($produk->gambar && Storage::disk('public')->exists($produk->gambar)) {
+                Storage::disk('public')->delete($produk->gambar);
             }
             
-            // Upload gambar baru
-            $path = $request->file('gambar')->store('produk', 'public');
+            // 2. Upload gambar baru
+            $file = $request->file('gambar');
+            $fileName = 'produk_' . time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $path = $file->storeAs('produk', $fileName, 'public');
+            
+            // 3. Simpan path baru ke data
             $data['gambar'] = $path;
-        } else {
-            // Gunakan gambar lama
-            $data['gambar'] = $produk->gambar;
         }
 
         // Update produk
         $produk->update($data);
 
         return redirect()
-            ->route('produk.index')
+            ->route('admin.produk.index')
             ->with('success', 'Produk berhasil diperbarui!');
     }
 
-    // Hapus produk
+    // Hapus produk DENGAN MENGHAPUS GAMBAR
     public function destroy(Produk $produk)
     {
         // Hapus gambar dari storage
-        if ($produk->gambar) {
-            Storage::delete('public/' . $produk->gambar);
+        if ($produk->gambar && Storage::disk('public')->exists($produk->gambar)) {
+            Storage::disk('public')->delete($produk->gambar);
         }
 
         // Hapus produk dari database
         $produk->delete();
 
         return redirect()
-            ->route('produk.index')
+            ->route('admin.produk.index')
             ->with('success', 'Produk berhasil dihapus!');
     }
 }
