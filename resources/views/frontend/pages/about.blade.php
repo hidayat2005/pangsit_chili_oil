@@ -4,7 +4,7 @@
 
 @section('content')
     <!-- HERO BANNER -->
-    <section class="hero-section" style="background: linear-gradient(rgba(74, 44, 42, 0.9), rgba(178, 34, 34, 0.9)), url('https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?ixlib=rb-4.0.3&auto=format&fit=crop&w=2080&q=80'); background-size: cover; background-position: center;">
+    <section class="hero-section" style="background: linear-gradient(rgba(74, 44, 42, 0.9), rgba(178, 34, 34, 0.9)), url('{{ asset('images/Image Halaman Tentang.webp') }}'); background-size: cover; background-position: center;">
         <div class="container">
             <div class="row min-vh-50 align-items-center">
                 <div class="col-lg-8 mx-auto text-center text-white">
@@ -31,22 +31,19 @@
                         Setiap pangsit dibuat dengan penuh cinta dan perhatian terhadap detail. Kami hanya menggunakan bahan-bahan 
                         pilihan berkualitas tinggi untuk memastikan setiap gigitan memberikan pengalaman kuliner terbaik.
                     </p>
-                    <a href="{{ route('front.products') }}" class="btn btn-danger btn-lg px-4">
+                    <a href="{{ route('front.products') }}" class="btn glass-btn-danger px-4">
                         <i class="fas fa-shopping-bag me-2"></i>Lihat Produk
                     </a>
                 </div>
                 <div class="col-lg-6">
                     <div class="position-relative">
                         <div class="rounded-4 overflow-hidden shadow-lg">
-                            <img src="https://images.unsplash.com/photo-1563245372-f21724e3856d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                            <img src="{{ asset('images/All Pangsit Chili Oil .webp') }}" 
                                 alt="Pangsit Chili Oil" 
                                 class="img-fluid w-100"
                                 style="height: 400px; object-fit: cover;">
                         </div>
-                        <div class="position-absolute bottom-0 start-0 bg-danger text-white p-4 rounded-end">
-                            <h3 class="fw-bold mb-0">500+</h3>
-                            <p class="mb-0">Pelanggan Puas</p>
-                        </div>
+
                     </div>
                 </div>
             </div>
@@ -66,7 +63,7 @@
             
             <div class="row g-4">
                 <div class="col-lg-4 col-md-6">
-                    <div class="card border-0 shadow-sm h-100 p-4">
+                    <div class="card glass-card h-100 p-4">
                         <div class="icon-wrapper mb-3">
                             <div class="rounded-circle bg-danger bg-opacity-10 d-inline-flex align-items-center justify-content-center" 
                                  style="width: 80px; height: 80px;">
@@ -79,7 +76,7 @@
                 </div>
                 
                 <div class="col-lg-4 col-md-6">
-                    <div class="card border-0 shadow-sm h-100 p-4">
+                    <div class="card glass-card h-100 p-4">
                         <div class="icon-wrapper mb-3">
                             <div class="rounded-circle bg-danger bg-opacity-10 d-inline-flex align-items-center justify-content-center" 
                                  style="width: 80px; height: 80px;">
@@ -92,7 +89,7 @@
                 </div>
                 
                 <div class="col-lg-4 col-md-6">
-                    <div class="card border-0 shadow-sm h-100 p-4">
+                    <div class="card glass-card h-100 p-4">
                         <div class="icon-wrapper mb-3">
                             <div class="rounded-circle bg-danger bg-opacity-10 d-inline-flex align-items-center justify-content-center" 
                                  style="width: 80px; height: 80px;">
@@ -108,15 +105,15 @@
     </section>
 
     <!-- CTA SECTION -->
-    <section class="py-5 bg-danger text-white" style="min-height: 500x;">
-        <div class="container">
+    <section class="py-4 bg-danger text-white position-relative overflow-hidden">
+        <div class="container position-relative" style="z-index: 2;">
             <div class="row align-items-center">
                 <div class="col-lg-8">
                     <h3 class="fw-bold mb-3">Siap Menjadi Bagian dari Cerita Kami?</h3>
                     <p class="mb-0 opacity-75">Bergabunglah dengan ribuan pelanggan puas yang telah menikmati kelezatan Pangsit Chili Oil.</p>
                 </div>
                 <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
-                    <a href="{{ route('front.products') }}" class="btn btn-light btn-lg px-4 py-3 fw-bold">
+                    <a href="{{ route('front.products') }}" class="btn glass-btn px-4 py-3">
                         <i class="fas fa-shopping-cart me-2"></i>Pesan Sekarang
                     </a>
                 </div>

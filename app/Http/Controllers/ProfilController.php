@@ -42,7 +42,7 @@ class ProfilController extends Controller
             ]
         );
         
-        return view('profil.edit', compact('pelanggan'));
+        return view('frontend.customer.profile_edit', compact('pelanggan'));
     }
 
     /**
@@ -66,7 +66,7 @@ class ProfilController extends Controller
             $validated
         );
         
-        return redirect()->route('profil.edit')
+        return redirect()->route('customer.profile.edit')
             ->with('success', 'Profil berhasil diperbarui!');
     }
 }

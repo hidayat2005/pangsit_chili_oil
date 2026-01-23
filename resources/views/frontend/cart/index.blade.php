@@ -4,7 +4,7 @@
 
 @section('content')
     <!-- HERO BANNER CART -->
-    <section class="hero-section" style="background: linear-gradient(rgba(220, 53, 69, 0.8), rgba(178, 34, 34, 0.9)), url('https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?ixlib=rb-4.0.3&auto=format&fit=crop&w=2080&q=80'); background-size: cover; background-position: center;">
+    <section class="hero-section" style="background: linear-gradient(rgba(220, 53, 69, 0.8), rgba(178, 34, 34, 0.9)), url('{{ asset('images/Image Halaman Keranjang.webp') }}'); background-size: cover; background-position: center;">
         <div class="container">
             <div class="row min-vh-40 align-items-center">
                 <div class="col-lg-8 mx-auto text-center text-white">
@@ -18,21 +18,6 @@
     <!-- CART SECTION -->
     <section class="py-5 bg-light">
         <div class="container">
-            @if(session('success'))
-            <div class="alert alert-success alert-dismissible fade show mb-4">
-                <i class="fas fa-check-circle me-2"></i>
-                {{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-            @endif
-
-            @if(session('error'))
-            <div class="alert alert-danger alert-dismissible fade show mb-4">
-                <i class="fas fa-exclamation-circle me-2"></i>
-                {{ session('error') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-            @endif
 
             <div class="row">
                 <div class="col-lg-8">
@@ -51,8 +36,8 @@
                             
                             @if(count($cartItems) > 0)
                                 <div class="table-responsive">
-                                    <table class="table table-hover mb-0">
-                                        <thead class="table-light">
+                                    <table class="table table-hover mb-0 cart-table-responsive">
+                                        <thead class="table-light d-none d-md-table-header-group">
                                             <tr>
                                                 <th scope="col" class="border-0">Produk</th>
                                                 <th scope="col" class="border-0 text-center">Harga</th>
@@ -68,13 +53,12 @@
                                             
                                             @foreach($cartItems as $cartItem)
                                                 @php
-                                                    // Akses sebagai array key, bukan object property
-                                                    $product = $cartItem['product']; // Object Produk
-                                                    $quantity = $cartItem['quantity']; // Integer
-                                                    $subtotal = $cartItem['subtotal']; // Integer
-                                                    $total += $subtotal; // Tambah ke total
+                                                    $product = $cartItem['product'];
+                                                    $quantity = $cartItem['quantity'];
+                                                    $subtotal = $cartItem['subtotal'];
+                                                    $total += $subtotal;
                                                 @endphp
-                                                <tr>
+                                                <tr class="cart-item-row">
                                                     <td class="align-middle">
                                                         <div class="d-flex align-items-center">
                                                             <div class="flex-shrink-0 me-3">
@@ -106,71 +90,68 @@
                                                                         Stok: <span class="badge {{ $product->stok > 4 ? 'bg-success' : ($product->stok > 0 ? 'bg-warning' : 'bg-danger') }}">
                                                                             {{ $product->stok }}
                                                                         </span>
-                                                                        @if($quantity > $product->stok)
-                                                                            <span class="badge bg-danger ms-1">Stok kurang!</span>
-                                                                        @endif
                                                                     </small>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </td>
-                                                    <td class="align-middle text-center">
+                                                    <td class="align-middle text-md-center">
+                                                        <span class="mobile-label d-md-none">Harga:</span>
                                                         <span class="fw-bold text-danger">Rp {{ number_format($product->harga, 0, ',', '.') }}</span>
                                                     </td>
-                                                    <td class="align-middle text-center">
-                                                        <div class="d-flex align-items-center justify-content-center">
-                                                           <form action="{{ route('cart.update', ['id' => $product->id]) }}" method="POST" class="d-flex">
+                                                    <td class="align-middle text-md-center">
+                                                        <span class="mobile-label d-md-none">Kuantitas:</span>
+                                                        <div class="d-flex align-items-center justify-content-md-center mt-2 mt-md-0">
+                                                            <button type="button" 
+                                                                    class="btn btn-sm btn-outline-danger rounded-circle qty-btn"
+                                                                    data-id="{{ $product->id }}"
+                                                                    data-action="decrease"
+                                                                    {{ $quantity <= 1 ? 'disabled' : '' }}
+                                                                    style="width: 30px; height: 30px">
+                                                                <i class="fas fa-minus"></i>
+                                                            </button>
+                                                            <input type="number" 
+                                                                   name="quantity" 
+                                                                   value="{{ $quantity }}" 
+                                                                   min="1" 
+                                                                   max="{{ $product->stok }}"
+                                                                   class="form-control form-control-sm mx-2 text-center qty-input" 
+                                                                   data-id="{{ $product->id }}"
+                                                                   style="width: 60px">
+                                                            <button type="button" 
+                                                                    class="btn btn-sm btn-outline-danger rounded-circle qty-btn"
+                                                                    data-id="{{ $product->id }}"
+                                                                    data-action="increase"
+                                                                    {{ $quantity >= $product->stok ? 'disabled' : '' }}
+                                                                    style="width: 30px; height: 30px">
+                                                                <i class="fas fa-plus"></i>
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                    <td class="align-middle text-md-center">
+                                                        <span class="mobile-label d-md-none">Subtotal:</span>
+                                                        <span class="fw-bold text-danger item-subtotal" id="subtotal-{{ $product->id }}">Rp {{ number_format($subtotal, 0, ',', '.') }}</span>
+                                                    </td>
+                                                    <td class="align-middle text-md-center">
+                                                        <div class="d-flex justify-content-start justify-content-md-center mt-2 mt-md-0">
+                                                            <form action="{{ route('cart.remove', ['id' => $product->id]) }}" method="POST" class="d-flex">
                                                                 @csrf
-                                                                @method('PUT')
+                                                                @method('DELETE')
                                                                 <input type="hidden" name="product_id" value="{{ $product->id }}">
                                                                 <button type="submit" 
-                                                                        name="action" 
-                                                                        value="decrease" 
-                                                                        class="btn btn-sm btn-outline-danger rounded-circle"
-                                                                        {{ $quantity <= 1 ? 'disabled' : '' }}
-                                                                        style="width: 30px; height: 30px">
-                                                                    <i class="fas fa-minus"></i>
-                                                                </button>
-                                                                <input type="number" 
-                                                                       name="quantity" 
-                                                                       value="{{ $quantity }}" 
-                                                                       min="1" 
-                                                                       max="{{ $product->stok }}"
-                                                                       class="form-control form-control-sm mx-2 text-center" 
-                                                                       style="width: 60px"
-                                                                       onchange="this.form.submit()">
-                                                                <button type="submit" 
-                                                                        name="action" 
-                                                                        value="increase" 
-                                                                        class="btn btn-sm btn-outline-danger rounded-circle"
-                                                                        {{ $quantity >= $product->stok ? 'disabled' : '' }}
-                                                                        style="width: 30px; height: 30px">
-                                                                    <i class="fas fa-plus"></i>
+                                                                        class="btn btn-sm btn-outline-danger"
+                                                                        onclick="return confirm('Hapus produk dari keranjang?')">
+                                                                    <i class="fas fa-trash me-2 d-md-none"></i><span class="d-md-none">Hapus</span>
+                                                                    <i class="fas fa-trash d-none d-md-inline"></i>
                                                                 </button>
                                                             </form>
                                                         </div>
                                                     </td>
-                                                    <td class="align-middle text-center">
-                                                        <span class="fw-bold text-danger">Rp {{ number_format($subtotal, 0, ',', '.') }}</span>
-                                                    </td>
-                                                    <td class="align-middle text-center">
-                                                        <form action="{{ route('cart.remove', ['id' => $product->id]) }}" method="POST" class="d-flex">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <input type="hidden" name="product_id" value="{{ $product->id }}">
-                                                            <button type="submit" 
-                                                                    class="btn btn-sm btn-outline-danger"
-                                                                    onclick="return confirm('Hapus produk dari keranjang?')">
-                                                                <i class="fas fa-trash"></i>
-                                                            </button>
-                                                        </form>
-                                                    </td>
-                                                </tr>
                                             @endforeach
                                         </tbody>
                                     </table>
                                 </div>
-                            @else
+@else
                             <div class="text-center py-5">
                                 <div class="py-4">
                                     <i class="fas fa-shopping-cart fa-4x text-danger mb-4"></i>
@@ -205,7 +186,7 @@
 
                 <!-- Order Summary -->
                 <div class="col-lg-4">
-                    <div class="card border-0 shadow-sm sticky-top" style="top: 100px;">
+                    <div class="card border-0 shadow-sm sticky-top" style="top: 90px;">
                         <div class="card-header bg-danger text-white border-0 py-3">
                             <h4 class="fw-bold mb-0">
                                 <i class="fas fa-receipt me-2"></i>Ringkasan Pesanan
@@ -219,7 +200,7 @@
                             <div class="mb-3">
                                 <div class="d-flex justify-content-between mb-2">
                                     <span class="text-muted">Subtotal</span>
-                                    <span class="fw-bold">Rp {{ number_format($subtotal, 0, ',', '.') }}</span>
+                                    <span class="fw-bold" id="cart-subtotal">Rp {{ number_format($subtotal, 0, ',', '.') }}</span>
                                 </div>
                                 <div class="d-flex justify-content-between mb-2">
                                     <span class="text-muted">Ongkir</span>
@@ -232,20 +213,41 @@
                                 <hr>
                                 <div class="d-flex justify-content-between mb-3">
                                     <span class="fw-bold">Total</span>
-                                    <h4 class="fw-bold text-danger mb-0">Rp {{ number_format($subtotal + 2000, 0, ',', '.') }}</h4>
+                                    <h4 class="fw-bold text-danger mb-0" id="cart-total">Rp {{ number_format($subtotal + 2000, 0, ',', '.') }}</h4>
                                 </div>
                             </div>
 
                             <!-- Checkout Button -->
-                            @if(isset($checkoutRoute) && $checkoutRoute)
-                            <a href="{{ route($checkoutRoute) }}" class="btn btn-danger btn-lg w-100 py-3 mb-3">
-                                <i class="fas fa-lock me-2"></i>Proses Checkout
-                            </a>
-                            @else
-                            <a href="#" class="btn btn-secondary btn-lg w-100 py-3 mb-3 disabled">
-                                <i class="fas fa-lock me-2"></i>Checkout (Coming Soon)
-                            </a>
-                            @endif
+                            @php
+                                $waNumber = config('services.whatsapp.number'); // Nomor dari config
+                                $message = "Halo Pangsit Chili Oil! Saya ingin memesan:\n\n";
+                                foreach($cartItems as $item) {
+                                    $message .= "- " . $item['product']->nama_produk . " (x" . $item['quantity'] . ") = Rp " . number_format($item['subtotal'], 0, ',', '.') . "\n";
+                                }
+                                $message .= "\nSubtotal: Rp " . number_format($subtotal, 0, ',', '.') . "\n";
+                                $message .= "Biaya Layanan: Rp 2.000\n";
+                                $message .= "Total: Rp " . number_format($subtotal + 2000, 0, ',', '.') . "\n";
+
+                                if (auth()->check() && auth()->user()->pelanggan) {
+                                    $p = auth()->user()->pelanggan;
+                                    $message .= "\n--- Detail Pemesan ---\n";
+                                    $message .= "Nama: " . $p->nama_pelanggan . "\n";
+                                    $message .= "HP: " . ($p->nomor_telepon ?? '-') . "\n";
+                                    $message .= "Alamat: " . ($p->alamat ?? '-') . "\n";
+                                }
+
+                                $message .= "\nMohon segera diproses ya, terima kasih!";
+                                
+                                $waUrl = "https://wa.me/" . $waNumber . "?text=" . urlencode($message);
+                            @endphp
+                            
+                            <form action="{{ route('cart.checkout') }}" method="POST" id="checkout-form">
+                                @csrf
+                                <button type="submit" id="btn-whatsapp" class="btn btn-success btn-lg w-100 py-3 mb-3">
+                                    <i class="fab fa-whatsapp me-2"></i>Pesan via WhatsApp
+                                </button>
+                                <input type="hidden" id="wa-url" value="{{ $waUrl }}">
+                            </form>
 
                             <!-- Payment Methods -->
                             <div class="border-top pt-3">
@@ -382,21 +384,115 @@
 @push('scripts')
 <script>
     $(document).ready(function() {
-        // Handle add to cart button clicks in recommended products
-        $('.cart-button').click(function(e) {
-            e.preventDefault();
-            var productId = $(this).data('product-id');
-            
-            if (typeof window.addToCart === 'function') {
-                window.addToCart(productId);
-            }
-        });
+        // Global cart-button handler is now in cart-script.blade.php
         
-        // Auto update quantity when changed
-        $('input[name="quantity"]').on('change', function() {
-            if ($(this).val() < 1) {
-                $(this).val(1);
-            }
+        // Per-item lock to prevent multiple concurrent requests for the same product
+        let itemLocks = {};
+
+        function updateQuantity(id, newVal) {
+            // Check if this specific item is already being updated
+            if (itemLocks[id]) return;
+            itemLocks[id] = true;
+
+            let input = $(`.qty-input[data-id="${id}"]`);
+            let currentVal = parseInt(input.val());
+            
+            // NO Optimistic Update: Wait for server
+            $(`#subtotal-${id}`).css('opacity', '0.5');
+            
+            // Disable buttons and input for this item
+            $(`.qty-btn[data-id="${id}"]`).attr('disabled', true);
+            input.attr('disabled', true);
+
+            $.ajax({
+                url: `/cart/update/${id}`,
+                method: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    _method: 'PUT',
+                    quantity: newVal
+                },
+                success: function(response) {
+                    if (response.success) {
+                        // Update UI with server-confirmed values
+                        input.val(response.new_quantity);
+                        $(`#subtotal-${id}`).text(response.item_subtotal);
+                        $('#cart-subtotal').text(response.cart_subtotal);
+                        $('#cart-total').text(response.cart_total);
+                        $('#btn-whatsapp').attr('href', response.wa_url);
+                        
+                        const cartCount = $('#cart-count');
+                        cartCount.text(response.cart_count);
+                        if (response.cart_count == 0) {
+                            cartCount.addClass('d-none');
+                        } else {
+                            cartCount.removeClass('d-none');
+                        }
+                    }
+                },
+                error: function(xhr) {
+                    // Revert UI if needed (though we haven't changed input.val yet)
+                    input.val(currentVal);
+                    alert(xhr.responseJSON?.message || 'Gagal memperbarui jumlah');
+                },
+                complete: function() {
+                    // Minor delay before releasing lock to prevent rapid queue triggering
+                    setTimeout(() => {
+                        delete itemLocks[id];
+                        $(`#subtotal-${id}`).css('opacity', '1');
+                        
+                        // Refresh button states based on final value
+                        let finalVal = parseInt(input.val());
+                        let max = parseInt(input.attr('max'));
+                        $(`.qty-btn[data-id="${id}"][data-action="decrease"]`).attr('disabled', finalVal <= 1);
+                        $(`.qty-btn[data-id="${id}"][data-action="increase"]`).attr('disabled', finalVal >= max);
+                        input.removeAttr('disabled');
+                    }, 100);
+                }
+            });
+        }
+
+        // Handle button clicks
+        $(document).on('click', '.qty-btn', function(e) {
+            e.preventDefault();
+            let id = $(this).data('id');
+            if (itemLocks[id]) return;
+
+            let action = $(this).data('action');
+            let input = $(`.qty-input[data-id="${id}"]`);
+            let currentVal = parseInt(input.val());
+            let newVal = (action === 'increase') ? currentVal + 1 : Math.max(1, currentVal - 1);
+            let max = parseInt(input.attr('max'));
+
+            if (newVal > max) newVal = max;
+            if (newVal === currentVal) return;
+
+            updateQuantity(id, newVal);
+        });
+
+        // Handle direct input changes (with debounce)
+        let inputTimeout;
+        $(document).on('change', '.qty-input', function() {
+            let id = $(this).data('id');
+            let val = parseInt($(this).val());
+            let max = parseInt($(this).attr('max'));
+
+            if (isNaN(val) || val < 1) val = 1;
+            if (val > max) val = max;
+
+            updateQuantity(id, val);
+        });
+        // Handle WhatsApp Checkout
+        $('#btn-whatsapp').on('click', function(e) {
+            e.preventDefault();
+            
+            let waUrl = $('#wa-url').val();
+            
+            // 1. Open WhatsApp in new tab
+            window.open(waUrl, '_blank');
+            
+            // 2. Submit form to clear cart & redirect
+            $('#checkout-form').submit();
         });
     });
 </script>

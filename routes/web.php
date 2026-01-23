@@ -10,6 +10,7 @@ use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\PelangganController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\ProfilController;
+use App\Http\Controllers\LaporanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -53,6 +54,7 @@ Route::prefix('cart')->name('cart.')->group(function () {
     Route::put('/update/{id}', [CartController::class, 'update'])->name('update');
     Route::delete('/remove/{id}', [CartController::class, 'remove'])->name('remove');
     Route::post('/clear', [CartController::class, 'clear'])->name('clear');
+    Route::post('/checkout', [CartController::class, 'checkout'])->name('checkout');
     
     // AJAX endpoints
     Route::get('/count', [CartController::class, 'count'])->name('count');
@@ -93,6 +95,8 @@ Route::middleware('auth')->group(function () {
     
     // --- Customer Orders ---
     Route::get('/orders', [DashboardController::class, 'orders'])->name('customer.orders');
+    Route::get('/orders/{id}', [DashboardController::class, 'orderDetail'])->name('customer.order.detail');
+    Route::delete('/orders/{id}', [DashboardController::class, 'orderDestroy'])->name('customer.orders.destroy');
     
     // --- Legacy Profile Routes (Backward compatibility) ---
     Route::get('/profil', [ProfilController::class, 'edit'])->name('profil.edit');
@@ -103,8 +107,7 @@ Route::middleware('auth')->group(function () {
 // ADMIN PANEL ROUTES (Authenticated users with admin/kasir role)
 // ============================================================================
 
-Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
-    
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     // --- Dashboard ---
     Route::get('/', [DashboardController::class, 'index'])->name('index');
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -124,6 +127,19 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     
     // --- User Management (Admin/Kasir CRUD) ---
     Route::resource('users', AdminController::class);
+
+    // --- Laporan Penjualan ---
+    Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
+    Route::post('/laporan/generate-sample', [LaporanController::class, 'generateSampleData'])->name('laporan.sample');
+    Route::patch('/laporan/{pesanan}/status', [LaporanController::class, 'updateStatus'])->name('laporan.updateStatus');
+    Route::get('/laporan/{pesanan}', [LaporanController::class, 'show'])->name('laporan.show');
+    
+    // --- Notification System ---
+    Route::get('/orders/check', [LaporanController::class, 'checkNewOrders'])->name('orders.check');
+    Route::post('/orders/mark-notified', [LaporanController::class, 'markAsNotified'])->name('orders.markNotified');
+
+    // --- Pengeluaran Operasional ---
+    Route::resource('pengeluaran', \App\Http\Controllers\PengeluaranController::class);
 });
 
 // ============================================================================
@@ -149,6 +165,10 @@ Route::prefix('api')->name('api.')->group(function () {
             'data' => $categories
         ]);
     })->name('categories');
+
+    // Customer Notification API
+    Route::get('/notifications/check', [\App\Http\Controllers\CustomerNotificationController::class, 'checkUpdates'])->name('notifications.check');
+    Route::post('/notifications/mark-read', [\App\Http\Controllers\CustomerNotificationController::class, 'markAsRead'])->name('notifications.markRead');
 });
 
 // ============================================================================

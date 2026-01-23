@@ -1,10 +1,7 @@
-{{-- 
-    Cara pakai: 
-    @include('frontend.partials.product-card', ['product' => $product])
---}}
-
+@if(!isset($noWrapper) || !$noWrapper)
 <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
-    <div class="card product-card border-0 shadow-sm h-100">
+@endif
+    <div class="card product-card glass-card h-100">
         <!-- Badge Stok -->
         @if($product->stok == 0)
         <div class="position-absolute top-0 start-0 m-3" style="z-index: 10;">
@@ -33,7 +30,7 @@
         </a>
         
         <!-- Product Info -->
-        <div class="card-body p-4">
+        <div class="card-body p-4 d-flex flex-column">
             <!-- Category -->
             @if($product->kategori)
             <div class="mb-2">
@@ -53,8 +50,8 @@
                 {{ Str::limit($product->deskripsi, 60) }}
             </p>
             
-            <!-- Price & Stock -->
-            <div class="d-flex justify-content-between align-items-center">
+            <!-- Price & Stock - Pushed to bottom -->
+            <div class="mt-auto d-flex justify-content-between align-items-center">
                 <div>
                     <h4 class="text-danger fw-bold mb-0">Rp {{ number_format($product->harga, 0, ',', '.') }}</h4>
                     <small class="text-muted">
@@ -65,26 +62,34 @@
                     </small>
                 </div>
                 
-                <!-- Add to Cart Button -->
+                <!-- Actions -->
                 @if($product->stok > 0)
-                <button class="btn btn-danger btn-sm rounded-circle cart-button" 
-                        data-product-id="{{ $product->id }}"
-                        style="width: 40px; height: 40px; z-index: 10; position: relative;"
-                        title="Tambah ke Keranjang">
-                    <i class="fas fa-cart-plus"></i>
-                </button>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-outline-danger btn-sm rounded-pill px-3 buy-button" 
+                            data-product-id="{{ $product->id }}"
+                            title="Beli Sekarang">
+                        Beli
+                    </button>
+                    <button class="btn btn-danger btn-sm rounded-circle cart-button" 
+                            data-product-id="{{ $product->id }}"
+                            style="width: 40px; height: 40px; flex-shrink: 0;"
+                            title="Tambah ke Keranjang">
+                        <i class="fas fa-cart-plus"></i>
+                    </button>
+                </div>
                 @else
-                <button class="btn btn-secondary btn-sm rounded-circle" 
-                        style="width: 40px; height: 40px;"
+                <button class="btn btn-secondary btn-sm rounded-pill px-3" 
                         disabled
                         title="Stok Habis">
-                    <i class="fas fa-ban"></i>
+                    Habis
                 </button>
                 @endif
             </div>
         </div>
     </div>
+@if(!isset($noWrapper) || !$noWrapper)
 </div>
+@endif
 
 @once
 @push('styles')

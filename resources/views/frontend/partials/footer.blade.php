@@ -49,7 +49,7 @@
                     </p>
                     <p class="mb-3">
                         <i class="fas fa-phone me-2"></i>
-                        +62 812-3456-7890
+                        {{ config('services.whatsapp.number') }}
                     </p>
                     <p class="mb-3">
                         <i class="fas fa-envelope me-2"></i>

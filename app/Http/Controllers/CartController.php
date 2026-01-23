@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Produk; // Gunakan model Produk (bukan Product)
+use App\Models\Produk;
+use App\Models\Pesanan;
+use App\Models\ItemPesanan;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class CartController extends Controller
 {
@@ -60,61 +64,50 @@ class CartController extends Controller
         ]);
         
         $productId = $request->product_id;
-        $quantity = $request->quantity;
+        $quantity = (int)($request->quantity ?? 1);
+        $setMode = $request->input('mode') === 'set';
         
         // Cek stok produk
         $product = Produk::find($productId);
         if (!$product) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Produk tidak ditemukan!'
-            ], 404);
+            return response()->json(['success' => false, 'message' => 'Produk tidak ditemukan!'], 404);
         }
         
-        // Ambil data keranjang dari session
         $cart = session()->get('cart', []);
         
-        // Cek apakah produk sudah ada di keranjang
         if (isset($cart[$productId])) {
-            $newQuantity = $cart[$productId]['quantity'] + $quantity;
+            $newQuantity = $setMode ? $quantity : ($cart[$productId]['quantity'] + $quantity);
             
-            // Cek stok tersedia
             if ($newQuantity > $product->stok) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Stok tidak mencukupi! Stok tersedia: ' . $product->stok
+                    'message' => 'Stok tidak mencukupi! Tersedia: ' . $product->stok
                 ], 400);
             }
             
-            $cart[$productId]['quantity'] = $newQuantity;
+            $cart[$productId]['quantity'] = max(1, $newQuantity);
         } else {
-            // Cek stok tersedia
             if ($quantity > $product->stok) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Stok tidak mencukupi! Stok tersedia: ' . $product->stok
+                    'message' => 'Stok tidak mencukupi! Tersedia: ' . $product->stok
                 ], 400);
             }
             
-            // Tambah produk baru
             $cart[$productId] = [
-                'quantity' => $quantity,
+                'quantity' => max(1, $quantity),
                 'added_at' => now()
             ];
         }
         
-        // Simpan ke session
         session()->put('cart', $cart);
         
-        // Jika request AJAX
         if ($request->ajax()) {
             $count = array_sum(array_column($cart, 'quantity'));
-            
             return response()->json([
                 'success' => true,
                 'message' => 'Produk berhasil ditambahkan ke keranjang!',
-                'count' => $count,
-                'cart' => $cart
+                'count' => $count
             ]);
         }
         
@@ -127,47 +120,112 @@ class CartController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'quantity' => 'required|integer|min:1'
+            'quantity' => 'nullable|integer|min:0',
+            'action' => 'nullable|string|in:increase,decrease'
         ]);
         
         $cart = session()->get('cart', []);
         
         if (isset($cart[$id])) {
-            // Cek stok produk
             $product = Produk::find($id);
             if (!$product) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Produk tidak ditemukan!'
-                ], 404);
+                if ($request->ajax()) {
+                    return response()->json(['success' => false, 'message' => 'Produk tidak ditemukan!'], 404);
+                }
+                return redirect()->back()->with('error', 'Produk tidak ditemukan!');
+            }
+            
+            $currentQuantity = $cart[$id]['quantity'];
+            
+            // Prioritaskan nilai quantity yang dikirim langsung (idempotent)
+            if ($request->has('quantity') && !is_null($request->quantity)) {
+                $newQuantity = (int)$request->quantity;
+            } else {
+                $newQuantity = $currentQuantity;
+                // Handle increase/decrease buttons jika quantity tidak dikirim
+                if ($request->action == 'increase') {
+                    $newQuantity = $currentQuantity + 1;
+                } elseif ($request->action == 'decrease') {
+                    $newQuantity = max(1, $currentQuantity - 1);
+                }
             }
             
             // Cek stok tersedia
-            if ($request->quantity > $product->stok) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Stok tidak mencukupi! Stok tersedia: ' . $product->stok
-                ], 400);
+            if ($newQuantity > $product->stok) {
+                if ($request->ajax()) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Stok tidak mencukupi! Stok tersedia: ' . $product->stok
+                    ], 400);
+                }
+                return redirect()->back()->with('error', 'Stok tidak mencukupi!');
             }
             
-            if ($request->quantity <= 0) {
+            if ($newQuantity <= 0) {
                 unset($cart[$id]);
             } else {
-                $cart[$id]['quantity'] = $request->quantity;
+                $cart[$id]['quantity'] = $newQuantity;
             }
             
             session()->put('cart', $cart);
             
-            return response()->json([
-                'success' => true,
-                'message' => 'Keranjang berhasil diperbarui!'
-            ]);
+            if ($request->ajax()) {
+                // Calculate all data for AJAX response
+                $itemSubtotal = $cart[$id]['quantity'] * $product->harga;
+                $cartSubtotal = 0;
+                $productIds = array_keys($cart);
+                $allProducts = Produk::whereIn('id', $productIds)->get()->keyBy('id');
+                
+                $waMessage = "Halo Pangsit Chili Oil! Saya ingin memesan:\n\n";
+                foreach ($cart as $pId => $item) {
+                    $p = $allProducts->get($pId);
+                    if ($p) {
+                        $sTotal = $p->harga * $item['quantity'];
+                        $cartSubtotal += $sTotal;
+                        $waMessage .= "- " . $p->nama_produk . " (x" . $item['quantity'] . ") = Rp " . number_format($sTotal, 0, ',', '.') . "\n";
+                    }
+                }
+                $waMessage .= "\nSubtotal: Rp " . number_format($cartSubtotal, 0, ',', '.') . "\n";
+                $waMessage .= "Biaya Layanan: Rp 2.000\n";
+                $waMessage .= "Total: Rp " . number_format($cartSubtotal + 2000, 0, ',', '.') . "\n\n";
+                $customerInfo = "";
+                if (auth()->check()) {
+                    $pelanggan = auth()->user()->pelanggan;
+                    if ($pelanggan) {
+                        $customerInfo = "\n--- Detail Pemesan ---\n";
+                        $customerInfo .= "Nama: " . $pelanggan->nama_pelanggan . "\n";
+                        $customerInfo .= "HP: " . ($pelanggan->nomor_telepon ?? '-') . "\n";
+                        $customerInfo .= "Alamat: " . ($pelanggan->alamat ?? '-') . "\n";
+                    }
+                }
+
+                $waMessage .= $customerInfo . "\nMohon segera diproses ya, terima kasih!";
+                
+                $waUrl = "https://wa.me/" . config('services.whatsapp.number') . "?text=" . urlencode($waMessage);
+                $cartCount = array_sum(array_column($cart, 'quantity'));
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Jumlah produk di keranjang berhasil diperbarui!',
+                    'new_quantity' => $cart[$id]['quantity'],
+                    'item_subtotal' => 'Rp ' . number_format($itemSubtotal, 0, ',', '.'),
+                    'cart_subtotal' => 'Rp ' . number_format($cartSubtotal, 0, ',', '.'),
+                    'cart_total' => 'Rp ' . number_format($cartSubtotal + 2000, 0, ',', '.'),
+                    'wa_url' => $waUrl,
+                    'cart_count' => $cartCount
+                ]);
+            }
+            
+            return redirect()->route('cart.index')->with('success', 'Jumlah produk berhasil diperbarui!');
         }
         
-        return response()->json([
-            'success' => false,
-            'message' => 'Produk tidak ditemukan di keranjang!'
-        ], 404);
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Produk tidak ditemukan di keranjang!'
+            ], 404);
+        }
+        return redirect()->back()->with('error', 'Produk tidak ditemukan di keranjang!');
     }
 
     /**
@@ -181,16 +239,22 @@ class CartController extends Controller
             unset($cart[$id]);
             session()->put('cart', $cart);
             
-            return response()->json([
-                'success' => true,
-                'message' => 'Produk berhasil dihapus dari keranjang!'
-            ]);
+            if (request()->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Produk berhasil dihapus dari keranjang!'
+                ]);
+            }
+            return redirect()->back()->with('success', 'Produk berhasil dihapus!');
         }
         
-        return response()->json([
-            'success' => false,
-            'message' => 'Produk tidak ditemukan di keranjang!'
-        ], 404);
+        if (request()->ajax()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Produk tidak ditemukan di keranjang!'
+            ], 404);
+        }
+        return redirect()->back()->with('error', 'Produk tidak ditemukan!');
     }
 
     /**
@@ -200,10 +264,95 @@ class CartController extends Controller
     {
         session()->forget('cart');
         
-        return response()->json([
-            'success' => true,
-            'message' => 'Keranjang berhasil dikosongkan!'
-        ]);
+        if (request()->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Keranjang berhasil dikosongkan!'
+            ]);
+        }
+        return redirect()->back()->with('success', 'Keranjang berhasil dikosongkan!');
+    }
+
+    /**
+     * Proses Checkout: Simpan ke Database, Kurangi Stok, dan Kosongkan Keranjang
+     */
+    public function checkout()
+    {
+        $cart = session()->get('cart', []);
+        
+        if (empty($cart)) {
+            return redirect()->route('cart.index')->with('error', 'Keranjang Anda kosong!');
+        }
+
+        // Pastikan User sudah Login dan punya data Pelanggan
+        if (!auth()->check()) {
+            return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu untuk melakukan pemesanan.');
+        }
+
+        $user = auth()->user();
+        $pelanggan = $user->pelanggan;
+
+        if (!$pelanggan) {
+            return redirect()->route('customer.profile')->with('error', 'Lengkapi data profil (nomor telepon & alamat) Anda terlebih dahulu.');
+        }
+
+        DB::beginTransaction();
+        try {
+            // 1. Hitung Total Harga & Validasi Stok Terakhir
+            $totalHarga = 0;
+            $productIds = array_keys($cart);
+            $products = Produk::whereIn('id', $productIds)->lockForUpdate()->get()->keyBy('id');
+            
+            foreach ($cart as $id => $item) {
+                $product = $products->get($id);
+                if (!$product || $product->stok < $item['quantity']) {
+                    throw new \Exception("Stok produk '" . ($product->nama_produk ?? 'Unknown') . "' tidak mencukupi.");
+                }
+                $totalHarga += $product->harga * $item['quantity'];
+            }
+
+            // 2. Buat Rekam Data Pesanan
+            $pesanan = Pesanan::create([
+                'nomor_pesanan' => 'ORD-' . strtoupper(Str::random(8)),
+                'pelanggan_id' => $pelanggan->id,
+                'total_harga' => $totalHarga + 2000, // Termasuk Biaya Layanan
+                'status_pesanan' => 'menunggu',
+                'catatan' => 'Dipesan via WhatsApp',
+                'whatsapp_terkirim' => true,
+                'whatsapp_terkirim_pada' => now()
+            ]);
+
+            // 3. Simpan Item Pesanan & Kurangi Stok
+            foreach ($cart as $id => $item) {
+                $product = $products->get($id);
+                
+                ItemPesanan::create([
+                    'pesanan_id' => $pesanan->id,
+                    'produk_id' => $product->id,
+                    'jumlah' => $item['quantity'],
+                    'harga_saat_ini' => $product->harga
+                ]);
+
+                // Kurangi Stok
+                $product->decrement('stok', $item['quantity']);
+                
+                // Update status habis jika stok 0
+                if ($product->fresh()->stok <= 0) {
+                    $product->update(['status' => 'habis']);
+                }
+            }
+
+            DB::commit();
+            
+            // Kosongkan Keranjang
+            session()->forget('cart');
+
+            return redirect()->route('home')->with('success', 'Pesanan berhasil dicatat! Silakan lanjutkan konfirmasi melalui WhatsApp.');
+            
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->route('cart.index')->with('error', 'Gagal memproses pesanan: ' . $e->getMessage());
+        }
     }
 
     /**

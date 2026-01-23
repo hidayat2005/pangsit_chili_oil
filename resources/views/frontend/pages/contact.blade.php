@@ -4,7 +4,7 @@
 
 @section('content')
     <!-- HERO BANNER -->
-    <section class="hero-section" style="background: linear-gradient(rgba(74, 44, 42, 0.9), rgba(178, 34, 34, 0.9)), url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&auto=format&fit=crop&w=2080&q=80'); background-size: cover; background-position: center;">
+    <section class="hero-section" style="background: linear-gradient(rgba(74, 44, 42, 0.9), rgba(178, 34, 34, 0.9)), url('{{ asset('images/Image Halaman Kontak .webp') }}'); background-size: cover; background-position: center;">
         <div class="container">
             <div class="row min-vh-50 align-items-center">
                 <div class="col-lg-8 mx-auto text-center text-white">
@@ -28,7 +28,7 @@
             
             <div class="row g-4">
                 <div class="col-lg-4 col-md-6">
-                    <div class="card border-0 shadow-sm h-100 text-center p-4 contact-card">
+                    <div class="card glass-card h-100 text-center p-4 contact-card">
                         <div class="icon-wrapper mb-3">
                             <div class="rounded-circle bg-danger bg-opacity-10 d-inline-flex align-items-center justify-content-center" 
                                  style="width: 80px; height: 80px;">
@@ -45,7 +45,7 @@
                 </div>
                 
                 <div class="col-lg-4 col-md-6">
-                    <div class="card border-0 shadow-sm h-100 text-center p-4 contact-card">
+                    <div class="card glass-card h-100 text-center p-4 contact-card">
                         <div class="icon-wrapper mb-3">
                             <div class="rounded-circle bg-danger bg-opacity-10 d-inline-flex align-items-center justify-content-center" 
                                  style="width: 80px; height: 80px;">
@@ -54,20 +54,20 @@
                         </div>
                         <h5 class="fw-bold mb-3">Telepon & WhatsApp</h5>
                         <p class="text-muted mb-2">
-                            <a href="tel:+6281234567890" class="text-decoration-none text-dark">
-                                <i class="fas fa-phone me-2 text-danger"></i>+62 812-3456-7890
+                            <a href="tel:{{ config('services.whatsapp.number') }}" class="text-decoration-none text-dark">
+                                <i class="fas fa-phone me-2 text-danger"></i>{{ config('services.whatsapp.number') }}
                             </a>
                         </p>
                         <p class="text-muted mb-0">
-                            <a href="https://wa.me/6281234567890" class="text-decoration-none text-dark" target="_blank">
-                                <i class="fab fa-whatsapp me-2 text-success"></i>+62 812-3456-7890
+                            <a href="https://wa.me/{{ config('services.whatsapp.number') }}" class="text-decoration-none text-dark" target="_blank">
+                                <i class="fab fa-whatsapp me-2 text-success"></i>{{ config('services.whatsapp.number') }}
                             </a>
                         </p>
                     </div>
                 </div>
                 
                 <div class="col-lg-4 col-md-6">
-                    <div class="card border-0 shadow-sm h-100 text-center p-4 contact-card">
+                    <div class="card glass-card h-100 text-center p-4 contact-card">
                         <div class="icon-wrapper mb-3">
                             <div class="rounded-circle bg-danger bg-opacity-10 d-inline-flex align-items-center justify-content-center" 
                                  style="width: 80px; height: 80px;">
@@ -106,13 +106,6 @@
                     <div class="card border-0 shadow-sm p-4">
                         <h3 class="fw-bold text-danger mb-4">Kirim Pesan kepada Kami</h3>
                         
-                        @if(session('success'))
-                        <div class="alert alert-success alert-dismissible fade show mb-4">
-                            <i class="fas fa-check-circle me-2"></i>
-                            {{ session('success') }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                        </div>
-                        @endif
                         
                         <form action="{{ route('contact.submit') }}" method="POST">
                             @csrf

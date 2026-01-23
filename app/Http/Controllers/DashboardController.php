@@ -66,8 +66,8 @@ class DashboardController extends Controller
         try {
             if (class_exists(Pesanan::class)) {
                 $totalPesanan = Pesanan::count();
-                $pesananSelesai = Pesanan::where('status', 'selesai')->count();
-                $pesananPending = Pesanan::where('status', 'pending')->count();
+                $pesananSelesai = Pesanan::where('status_pesanan', 'selesai')->count();
+                $pesananPending = Pesanan::where('status_pesanan', 'menunggu')->count();
             }
         } catch (\Exception $e) {
             // Jika model Pesanan belum ada
@@ -115,8 +115,62 @@ class DashboardController extends Controller
      */
     public function orders()
     {
-        // Get customer orders
-        // TODO: Implement when Pesanan model has customer relationship
-        return view('frontend.customer.orders');
+        $user = auth()->user();
+        $pelanggan = Pelanggan::where('user_id', $user->id)->first();
+        
+        $orders = collect();
+        if ($pelanggan) {
+            $orders = Pesanan::where('pelanggan_id', $pelanggan->id)
+                            ->latest()
+                            ->get();
+        }
+        
+        return view('frontend.customer.orders', compact('orders'));
+    }
+
+    /**
+     * Detail Pesanan Pelanggan
+     */
+    public function orderDetail($id)
+    {
+        $user = auth()->user();
+        $pelanggan = Pelanggan::where('user_id', $user->id)->first();
+        
+        if (!$pelanggan) {
+            return redirect()->route('home')->with('error', 'Data pelanggan tidak ditemukan.');
+        }
+
+        $order = Pesanan::with(['items.produk'])
+                        ->where('id', $id)
+                        ->where('pelanggan_id', $pelanggan->id)
+                        ->firstOrFail();
+        
+        return view('frontend.customer.order_detail', compact('order'));
+    }
+
+    /**
+     * Hapus Pesanan (Pelanggan)
+     */
+    public function orderDestroy($id)
+    {
+        $user = auth()->user();
+        $pelanggan = Pelanggan::where('user_id', $user->id)->first();
+        
+        if (!$pelanggan) {
+            return redirect()->back()->with('error', 'Data pelanggan tidak ditemukan.');
+        }
+
+        $order = Pesanan::where('id', $id)
+                        ->where('pelanggan_id', $pelanggan->id)
+                        ->firstOrFail();
+
+        // Hanya pesanan 'menunggu' atau 'dibatalkan' yang boleh dihapus
+        if (!in_array(strtolower($order->status_pesanan), ['menunggu', 'dibatalkan'])) {
+            return redirect()->back()->with('error', 'Pesanan yang sedang diproses, dikonfirmasi, atau sudah selesai tidak dapat dihapus.');
+        }
+
+        $order->delete();
+
+        return redirect()->route('customer.orders')->with('success', 'Riwayat pesanan berhasil dihapus.');
     }
 }

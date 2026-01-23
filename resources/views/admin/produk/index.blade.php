@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('title', 'Manajemen Produk')
 
@@ -6,266 +6,198 @@
     <!-- Header -->
     <div class="row mb-4">
         <div class="col">
-            <div class="d-flex justify-content-between align-items-center">
+            <div class="glass-card p-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
                 <div>
-                    <h3 class="mb-1">Daftar Produk</h3>
-                    <p class="text-muted mb-0">Kelola produk Pangsit Chili Oil</p>
+                    <h2 class="fw-bold mb-1 text-dark">Manajemen Produk</h2>
+                    <p class="text-muted mb-0">Atur ketersediaan dan harga menu Pangsit Chili Oil Anda.</p>
                 </div>
                 <a href="{{ route('admin.produk.create') }}" class="btn btn-primary">
-                    <i class="fas fa-plus me-1"></i>Tambah Produk
+                    <i class="fas fa-plus me-2"></i>Tambah Produk Baru
                 </a>
             </div>
         </div>
     </div>
 
-<!-- Statistik Produk -->
-<div class="row mb-4">
-    <div class="col-md-3 mb-3">
-        <div class="card bg-primary text-white h-100">
-            <div class="card-body d-flex flex-column justify-content-between">
-                <div class="d-flex justify-content-between align-items-start">
-                    <div>
-                        <h6 class="mb-2">Total Produk</h6>
-                        <h2 class="mb-0">{{ $totalProduk }}</h2>
+    <!-- Statistik Produk -->
+    <div class="row g-4 mb-4">
+        <div class="col-xl-3 col-md-6">
+            <div class="card h-100" style="border-left: 5px solid #6366f1 !important;">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <div class="rounded-circle d-flex align-items-center justify-content-center" 
+                             style="width: 45px; height: 45px; background: rgba(99, 102, 241, 0.1); color: #6366f1;">
+                            <i class="fas fa-box fs-5"></i>
+                        </div>
                     </div>
-                    <i class="fas fa-box fa-2x opacity-75"></i>
+                    <div>
+                        <h6 class="text-muted fw-bold text-uppercase mb-1" style="font-size: 0.7rem; letter-spacing: 0.05em;">Total Produk</h6>
+                        <h3 class="fw-bold mb-0 text-dark">{{ $totalProduk }}</h3>
+                    </div>
                 </div>
-                <small class="opacity-75 mt-2">
-                    Jumlah semua produk
-                </small>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6">
+            <div class="card h-100" style="border-left: 5px solid #10b981 !important;">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <div class="rounded-circle d-flex align-items-center justify-content-center" 
+                             style="width: 45px; height: 45px; background: rgba(16, 185, 129, 0.1); color: #10b981;">
+                            <i class="fas fa-check-circle fs-5"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <h6 class="text-muted fw-bold text-uppercase mb-1" style="font-size: 0.7rem; letter-spacing: 0.05em;">Tersedia</h6>
+                        <h3 class="fw-bold mb-0 text-dark">{{ $produkTersedia }}</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6">
+            <div class="card h-100" style="border-left: 5px solid #f59e0b !important;">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <div class="rounded-circle d-flex align-items-center justify-content-center" 
+                             style="width: 45px; height: 45px; background: rgba(245, 158, 11, 0.1); color: #f59e0b;">
+                            <i class="fas fa-exclamation-triangle fs-5"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <h6 class="text-muted fw-bold text-uppercase mb-1" style="font-size: 0.7rem; letter-spacing: 0.05em;">Stok Rendah</h6>
+                        <h3 class="fw-bold mb-0 text-dark">{{ $produkStokRendah }}</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6">
+            <div class="card h-100" style="border-left: 5px solid #ef4444 !important;">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <div class="rounded-circle d-flex align-items-center justify-content-center" 
+                             style="width: 45px; height: 45px; background: rgba(239, 68, 68, 0.1); color: #ef4444;">
+                            <i class="fas fa-times-circle fs-5"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <h6 class="text-muted fw-bold text-uppercase mb-1" style="font-size: 0.7rem; letter-spacing: 0.05em;">Habis</h6>
+                        <h3 class="fw-bold mb-0 text-dark">{{ $produkHabis }}</h3>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-    <div class="col-md-3 mb-3">
-        <div class="card bg-success text-white h-100">
-            <div class="card-body d-flex flex-column justify-content-between">
-                <div class="d-flex justify-content-between align-items-start">
-                    <div>
-                        <h6 class="mb-2">Tersedia</h6>
-                        <h2 class="mb-0">{{ $produkTersedia }}</h2>
-                    </div>
-                    <i class="fas fa-check-circle fa-2x opacity-75"></i>
-                </div>
-                <small class="opacity-75 mt-2">
-                    Produk tersedia
-                </small>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-3 mb-3">
-        <div class="card bg-warning text-white h-100">
-            <div class="card-body d-flex flex-column justify-content-between">
-                <div class="d-flex justify-content-between align-items-start">
-                    <div>
-                        <h6 class="mb-2">Stok Rendah</h6>
-                        <h2 class="mb-0">{{ $produkStokRendah }}</h2>
-                    </div>
-                    <i class="fas fa-exclamation-triangle fa-2x opacity-75"></i>
-                </div>
-                <small class="opacity-75 mt-2">
-                    Perlu restock
-                </small>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-3 mb-3">
-        <div class="card bg-danger text-white h-100">
-            <div class="card-body d-flex flex-column justify-content-between">
-                <div class="d-flex justify-content-between align-items-start">
-                    <div>
-                        <h6 class="mb-2">Habis</h6>
-                        <h2 class="mb-0">{{ $produkHabis }}</h2>
-                    </div>
-                    <i class="fas fa-times-circle fa-2x opacity-75"></i>
-                </div>
-                <small class="opacity-75 mt-2">
-                    Stok habis
-                </small>
-            </div>
-        </div>
-    </div>
-</div>
 
     <!-- Main Content -->
     <div class="row">
         <div class="col-12">
-            <!-- Product Table Card -->
-            <div class="card shadow-sm border-0">
-                <!-- Card Header -->
-                <div class="card-header bg-white py-3 border-bottom">
-                    <div class="row align-items-center">
-                        <div class="col-md-6">
-                            <h5 class="mb-0">Semua Produk</h5>
-                        </div>
-                        <div class="col-md-6 text-md-end">
-                            <span class="text-muted">
-                                Total: <strong>{{ $produks->total() }}</strong> produk
-                            </span>
-                        </div>
-                    </div>
+            <div class="table-card p-0">
+                <div class="card-header bg-white py-4 px-4 border-bottom d-flex align-items-center justify-content-between">
+                    <h5 class="fw-bold mb-0 text-dark">Data Produk</h5>
+                    <span class="text-muted small">Total Produk: <strong>{{ $produks->total() }}</strong></span>
                 </div>
 
-                <!-- Card Body -->
-                <div class="card-body p-0">
-                    <div class="table-responsive">
-                        <table class="table table-hover mb-0">
-                            <thead class="table-light">
-                                <tr>
-                                    <th class="py-3 px-4" width="50">No</th>
-                                    <th class="py-3 px-4" width="70">Gambar</th>
-                                    <th class="py-3 px-4">Nama Produk</th>
-                                    <th class="py-3 px-4" width="120">Kategori</th>
-                                    <th class="py-3 px-4" width="120">Harga</th>
-                                    <th class="py-3 px-4" width="80">Stok</th>
-                                    <th class="py-3 px-4" width="100">Status</th>
-                                    <th class="py-3 px-4 text-center" width="140">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($produks as $produk)
-                                <tr>
-                                    <td class="px-4 py-3 align-middle">
-                                        {{ ($produks->currentPage() - 1) * $produks->perPage() + $loop->iteration }}
-                                    </td>
-                                    <td class="px-4 py-3 align-middle">
-                                        @if($produk->gambar)
-                                            <div style="position: relative;">
-                                                <!-- Gambar sederhana -->
-                                                <img src="{{ asset('storage/' . $produk->gambar) }}" 
-                                                     alt="{{ $produk->nama_produk }}" 
-                                                     class="rounded border" 
-                                                     style="width: 60px; height: 60px; object-fit: cover; cursor: pointer;"
-                                                     data-bs-toggle="tooltip" 
-                                                     title="Klik untuk lihat besar"
-                                                     onerror="this.onerror=null; this.src='https://via.placeholder.com/60x60/cccccc/ffffff?text=No+Image';">
-                                            </div>
-                                        @else
-                                            <div class="bg-light rounded d-flex align-items-center justify-content-center" 
-                                                 style="width: 60px; height: 60px;">
-                                                <i class="fas fa-image text-muted"></i>
-                                            </div>
-                                            <small class="text-muted mt-1" style="font-size: 8px;">
-                                                No Image
-                                            </small>
-                                        @endif
-                                    </td>
-                                    <td class="px-4 py-3 align-middle">
-                                        <div>
-                                            <strong class="d-block mb-1">{{ $produk->nama_produk }}</strong>
-                                            @if($produk->deskripsi)
-                                                <small class="text-muted">{{ Str::limit($produk->deskripsi, 40) }}</small>
-                                            @endif
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th class="text-center" width="60">No</th>
+                                <th width="80">Produk</th>
+                                <th>Informasi Menu</th>
+                                <th width="150" class="text-center">Kategori</th>
+                                <th width="120" class="text-center">Harga</th>
+                                <th width="100" class="text-center">Stok</th>
+                                <th width="120" class="text-center">Status</th>
+                                <th width="150" class="text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($produks as $produk)
+                            <tr>
+                                <td class="text-center align-middle fw-bold text-muted">
+                                    {{ ($produks->currentPage() - 1) * $produks->perPage() + $loop->iteration }}
+                                </td>
+                                <td class="align-middle">
+                                    @if($produk->gambar)
+                                        <img src="{{ asset('storage/' . $produk->gambar) }}" 
+                                             alt="{{ $produk->nama_produk }}" 
+                                             class="rounded shadow-sm border" 
+                                             style="width: 60px; height: 60px; object-fit: cover;">
+                                    @else
+                                        <div class="bg-light rounded border d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                                            <i class="fas fa-image text-muted opacity-50"></i>
                                         </div>
-                                    </td>
-                                    <td class="px-4 py-3 align-middle">
-                                        <span class="badge bg-primary">
-                                            {{ $produk->kategori->nama_kategori ?? '-' }}
-                                        </span>
-                                    </td>
-                                    <td class="px-4 py-3 align-middle">
-                                        <div class="d-flex align-items-center">
-                                            <span class="text-success me-1">Rp</span>
-                                            <strong class="text-success">
-                                                {{ number_format($produk->harga, 0, ',', '.') }}
-                                            </strong>
-                                        </div>
-                                    </td>
-                                    <td class="px-4 py-3 align-middle">
-                                        <span class="badge {{ $produk->stok > 4 ? 'bg-success' : ($produk->stok > 0 ? 'bg-warning' : 'bg-danger') }}">
-                                            {{ $produk->stok }}
-                                        </span>
-                                    </td>
-                                    <td class="px-4 py-3 align-middle">
-                                        <span class="badge {{ $produk->status == 'tersedia' ? 'bg-success' : 'bg-danger' }}">
-                                            {{ $produk->status == 'tersedia' ? 'Tersedia' : 'Habis' }}
-                                        </span>
-                                    </td>
-                                    <td class="px-4 py-3 align-middle text-center">
-                                        <div class="btn-group btn-group-sm">
-                                            <a href="{{ route('admin.produk.show', $produk->id) }}" 
-                                               class="btn btn-outline-info px-3" 
-                                               title="Detail">
-                                                <i class="fas fa-eye"></i>
-                                            </a>
-                                            <a href="{{ route('admin.produk.edit', $produk->id) }}" 
-                                               class="btn btn-outline-warning px-3" 
-                                               title="Edit">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
-                                            <form action="{{ route('admin.produk.destroy', $produk->id) }}" method="POST" 
-                                                  class="d-inline">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" 
-                                                        class="btn btn-outline-danger px-3" 
-                                                        title="Hapus"
-                                                        onclick="return confirm('Hapus produk ini?')">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
-                                            </form>
-                                        </div>
-                                    </td>
-                                </tr>
-                                @empty
-                                <tr>
-                                    <td colspan="8" class="text-center py-5">
-                                        <div class="py-4">
-                                            <i class="fas fa-box fa-3x text-muted mb-3"></i>
-                                            <h5 class="text-muted">Belum ada produk</h5>
-                                            <p class="text-muted mb-4">Mulai dengan menambahkan produk pertama Anda</p>
-                                            <a href="{{ route('admin.produk.create') }}" class="btn btn-primary">
-                                                <i class="fas fa-plus me-2"></i>Tambah Produk
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <!-- Pagination -->
-                    @if($produks->hasPages())
-                    <div class="card-footer bg-white border-top py-3">
-                        <div class="row align-items-center">
-                            <div class="col-md-6">
-                                <div class="text-muted">
-                                    Menampilkan {{ $produks->firstItem() ?? 0 }} sampai {{ $produks->lastItem() ?? 0 }} 
-                                    dari {{ $produks->total() }} produk
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="d-flex justify-content-md-end">
-                                    {{ $produks->links() }}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    @endif
+                                    @endif
+                                </td>
+                                <td class="align-middle">
+                                    <div class="fw-bold text-dark">{{ $produk->nama_produk }}</div>
+                                    <small class="text-muted">{{ Str::limit($produk->deskripsi, 60) }}</small>
+                                </td>
+                                <td class="text-center align-middle">
+                                    <span class="badge bg-light text-primary border border-primary border-opacity-25 px-3">
+                                        {{ $produk->kategori->nama_kategori ?? '-' }}
+                                    </span>
+                                </td>
+                                <td class="text-center align-middle">
+                                    <span class="fw-bold text-success">Rp {{ number_format($produk->harga, 0, ',', '.') }}</span>
+                                </td>
+                                <td class="text-center align-middle">
+                                    <div class="fw-bold">{{ $produk->stok }}</div>
+                                </td>
+                                <td class="text-center align-middle">
+                                    @if($produk->status == 'tersedia')
+                                        <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-3">Tersedia</span>
+                                    @else
+                                        <span class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 px-3">Habis</span>
+                                    @endif
+                                </td>
+                                <td class="text-center align-middle">
+                                    <div class="d-flex justify-content-center gap-2">
+                                        <a href="{{ route('admin.produk.edit', $produk->id) }}" class="btn btn-sm btn-light border" title="Edit">
+                                            <i class="fas fa-edit text-warning"></i>
+                                        </a>
+                                        <form action="{{ route('admin.produk.destroy', $produk->id) }}" method="POST" class="d-inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-sm btn-light border" title="Hapus">
+                                                <i class="fas fa-trash text-danger"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            @empty
+                            <tr>
+                                <td colspan="8" class="text-center py-5">
+                                    <div class="mb-3"><i class="fas fa-box-open fa-4x text-muted opacity-25"></i></div>
+                                    <h5 class="text-muted">Produk masih kosong nih!</h5>
+                                    <a href="{{ route('admin.produk.create') }}" class="btn btn-primary mt-3">Tambah Produk Pertama</a>
+                                </td>
+                            </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
                 </div>
+
+                @if($produks->hasPages())
+                <div class="px-4 py-3 border-top">
+                    <div class="d-flex justify-content-between align-items-center flex-wrap">
+                        <small class="text-muted">Menampilkan {{ $produks->firstItem() }}-{{ $produks->lastItem() }} dari {{ $produks->total() }} produk</small>
+                        {{ $produks->links() }}
+                    </div>
+                </div>
+                @endif
             </div>
         </div>
     </div>
 @endsection
 
-@section('scripts')
+@push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Konfirmasi hapus
-        const deleteForms = document.querySelectorAll('form[action*="destroy"]');
-        deleteForms.forEach(form => {
-            form.addEventListener('submit', function(e) {
-                if (!confirm('Apakah Anda yakin ingin menghapus produk ini?')) {
-                    e.preventDefault();
-                }
-            });
-        });
-        
-        // Tooltips
+        // Tooltips initialization
         var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
         var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
             return new bootstrap.Tooltip(tooltipTriggerEl);
         });
     });
 </script>
-@endsection
+@endpush

@@ -13,11 +13,6 @@
                         <i class="fas fa-sign-in-alt me-2"></i>Login ke Akun
                     </h2>
                     
-                    @if(session('success'))
-                        <div class="alert alert-success">
-                            {{ session('success') }}
-                        </div>
-                    @endif
                     
                     @if($errors->any())
                         <div class="alert alert-danger">

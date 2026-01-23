@@ -37,7 +37,7 @@
         border-bottom: 1px solid rgba(220, 53, 69, 0.2);
         position: sticky;
         top: 0;
-        z-index: 1000;
+        z-index: 1050;
         transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
     
@@ -232,7 +232,6 @@
         background-color: var(--dark-brown);
         color: white;
         padding: 60px 0 20px;
-        margin-top: 80px;
     }
     
     .footer-title {
@@ -457,16 +456,192 @@ input[type="number"]::-webkit-outer-spin-button {
     box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
 }
 
-/* ========== BUTTON HOVER EFFECTS ========== */
-.btn-outline-danger:hover {
-    background-color: var(--primary-red);
-    color: white;
+/* ========== GLASSMORPHISM UTILITIES (iOS Style) ========== */
+.glass-card {
+    background: rgba(255, 255, 255, 0.45) !important;
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    border-radius: 20px !important;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1) !important;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
-.btn-outline-custom:hover {
-    background: var(--primary-red);
-    color: white;
+.glass-card:hover {
+    background: rgba(255, 255, 255, 0.55) !important;
+    transform: translateY(-8px);
+    box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.15) !important;
 }
+
+.glass-btn {
+    background: rgba(255, 255, 255, 0.25) !important;
+    backdrop-filter: blur(15px) saturate(160%) !important;
+    -webkit-backdrop-filter: blur(15px) saturate(160%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.4) !important;
+    color: white !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
+    border-radius: 12px !important;
+    font-weight: 600 !important;
+    transition: all 0.3s ease !important;
+}
+
+.glass-btn:hover {
+    background: rgba(255, 255, 255, 0.35) !important;
+    transform: scale(1.05);
+    color: white !important;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
+}
+
+.glass-btn-dark {
+    background: rgba(0, 0, 0, 0.2) !important;
+    backdrop-filter: blur(15px) saturate(160%) !important;
+    -webkit-backdrop-filter: blur(15px) saturate(160%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: white !important;
+    border-radius: 12px !important;
+}
+
+
+.glass-btn-danger {
+    background: rgba(220, 53, 69, 0.8) !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    color: white !important;
+    border-radius: 12px !important;
+    transition: all 0.3s ease !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 10px 24px !important;
+    text-decoration: none !important;
+}
+
+    .glass-btn-danger:hover {
+        background: rgba(220, 53, 69, 1) !important;
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(220, 53, 69, 0.3) !important;
+        color: white !important;
+    }
+
+    /* RESPONSIVE DESIGN (MOBILE FIRST ENHANCEMENTS) */
+    @media (max-width: 768px) {
+        .display-4 {
+            font-size: 2.2rem;
+        }
+        
+        .hero-section {
+            padding: 60px 0;
+            text-align: center;
+        }
+        
+        .min-vh-80 {
+            min-height: auto;
+            padding-bottom: 30px;
+        }
+        
+        .hero-section .d-flex {
+            justify-content: center;
+        }
+        
+        /* Product Card Mobile Tweaks */
+        .product-card .card-body {
+            padding: 1.25rem !important;
+        }
+        
+        .product-card .card-title {
+            font-size: 1.1rem;
+        }
+        
+        /* Cart Table Mobile Optimization */
+        .cart-table-responsive tbody tr {
+            display: block;
+            border-bottom: 2px solid #f8f9fa;
+            padding: 1rem 0;
+        }
+        
+        .cart-table-responsive td {
+            display: block;
+            text-align: left;
+            border: none;
+            padding: 0.5rem 1rem;
+        }
+        
+        .cart-table-responsive .mobile-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #999;
+            text-transform: uppercase;
+            display: block;
+            margin-bottom: 2px;
+        }
+    }
+
+    /* ========== CUSTOM FLOATING TOAST ========== */
+    .custom-toast {
+        background: white !important;
+        border-radius: 12px !important;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15) !important;
+        margin-bottom: 15px;
+        pointer-events: auto;
+    }
+    
+    .alert-success.custom-toast {
+        border-left: 5px solid #28a745 !important;
+    }
+    
+    .alert-danger.custom-toast, .alert-error.custom-toast {
+        border-left: 5px solid #dc3545 !important;
+    }
+
+    .slide-in-left {
+        animation: slideInLeft 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+    }
+    
+    @keyframes slideInLeft {
+        0% { transform: translateX(-100%); opacity: 0; }
+        100% { transform: translateX(0); opacity: 1; }
+    }
+    
+    .fade-out {
+        animation: fadeOut 0.5s ease-out forwards;
+    }
+    
+    @keyframes fadeOut {
+        0% { opacity: 1; transform: translateX(0); }
+        100% { opacity: 0; transform: translateX(-20px); }
+    }
 </style>
+
+<script>
+    // Global function to auto-hide toasts
+    function setupToastAutoClear() {
+        const container = document.getElementById('toast-container');
+        if (!container) return;
+
+        const alerts = container.querySelectorAll('.alert:not(.manual-close)');
+        alerts.forEach(alert => {
+            if (!alert.dataset.timerseta) {
+                alert.dataset.timerseta = "true";
+                setTimeout(() => {
+                    alert.classList.add('fade-out');
+                    setTimeout(() => { alert.remove(); }, 500);
+                }, 5000);
+            }
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', setupToastAutoClear);
+    
+    if (typeof MutationObserver !== 'undefined') {
+        const observer = new MutationObserver(setupToastAutoClear);
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.getElementById('toast-container');
+            if (container) {
+                observer.observe(container, { childList: true });
+            }
+        });
+    }
+</script>
 
 @stack('styles') <!-- Untuk styles tambahan per halaman -->

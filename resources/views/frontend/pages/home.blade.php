@@ -4,7 +4,7 @@
 
 @section('content')
     <!-- HERO SECTION -->
-    <section class="hero-section" style="background: linear-gradient(rgba(74, 44, 42, 0.9), rgba(178, 34, 34, 0.9)), url('/images/background.jpg'); background-size: cover; background-position: center;">
+    <section class="hero-section" style="background: linear-gradient(rgba(74, 44, 42, 0.8), rgba(178, 34, 34, 0.7)), url('{{ asset('images/background.jpg') }}'); background-size: cover; background-position: center;">
         <div class="container">
             <div class="row align-items-center min-vh-80">
                 <div class="col-lg-6 text-white">
@@ -48,16 +48,32 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-6 mt-5 mt-lg-0">
+                <div class="col-lg-6 mt-4 mt-lg-0">
                     <div class="position-relative">
-                        <div class="rounded-circle bg-warning" style="width: 450px; height: 450px; margin: 0 auto; position: relative; overflow: hidden; border: 10px solid rgba(255,255,255,0.2);">
+                        <div class="rounded-circle bg-warning mx-auto hero-image-circle" 
+                             style="position: relative; overflow: hidden; border: 10px solid rgba(255,255,255,0.2);">
                             <img src="/images/background_dua.jpg" 
                                  alt="Pangsit Chili Oil" 
-                                 class="img-fluid rounded-circle" 
-                                 style="width: 100%; height: 100%; object-fit: cover;">
+                                 class="img-fluid rounded-circle w-100 h-100 object-fit-cover">
                         </div>
                     </div>
                 </div>
+
+                <style>
+                    .hero-image-circle {
+                        width: 450px; height: 450px;
+                    }
+                    @media (max-width: 991px) {
+                        .hero-image-circle {
+                            width: 300px; height: 300px;
+                        }
+                    }
+                    @media (max-width: 576px) {
+                        .hero-image-circle {
+                            width: 250px; height: 250px;
+                        }
+                    }
+                </style>
             </div>
         </div>
     </section>
@@ -73,78 +89,28 @@
                 </div>
             </div>
             
-            <div class="row">
-                @php
-                    $featuredProducts = \App\Models\Produk::where('status', 'tersedia')
-                        ->orderBy('created_at', 'desc')
-                        ->take(8)
-                        ->get();
-                @endphp
-                
-                @foreach($featuredProducts as $product)
-                <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
-                    <div class="card product-card border-0 shadow-sm h-100">
-                        <!-- Badge Stok -->
-                        @if($product->stok < 5)
-                        <div class="position-absolute top-0 start-0 m-3">
-                            <span class="badge bg-danger">Hampir Habis</span>
-                        </div>
-                        @endif
-                        
-                        <!-- Product Image -->
-                        <div class="product-image-container position-relative" style="height: 200px; overflow: hidden;">
-                            @if($product->gambar)
-                                <img src="{{ asset('storage/' . $product->gambar) }}" 
-                                     class="w-100 h-100 object-fit-cover" 
-                                     alt="{{ $product->nama_produk }}">
-                            @else
-                                <div class="w-100 h-100 bg-secondary d-flex align-items-center justify-content-center">
-                                    <i class="fas fa-image fa-3x text-white"></i>
-                                </div>
-                            @endif
-                            <div class="product-overlay"></div>
-                        </div>
-                        
-                        <!-- Product Info -->
-                        <div class="card-body p-4">
-                            <!-- Category -->
-                            @if($product->kategori)
-                            <div class="mb-2">
-                                <span class="badge bg-danger bg-opacity-10 text-danger border border-danger">
-                                    {{ $product->kategori->nama_kategori }}
-                                </span>
-                            </div>
-                            @endif
-                            
-                            <!-- Name -->
-                            <h5 class="card-title fw-bold mb-2">{{ $product->nama_produk }}</h5>
-                            
-                            <!-- Description -->
-                            <p class="card-text text-muted small mb-3">
-                                {{ Str::limit($product->deskripsi, 60) }}
-                            </p>
-                            
-                            <!-- Price & Stock -->
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <h4 class="text-danger fw-bold mb-0">Rp {{ number_format($product->harga, 0, ',', '.') }}</h4>
-                                    <small class="text-muted">
-                                        Stok: 
-                                        <span class="badge {{ $product->stok > 4 ? 'bg-success' : ($product->stok > 0 ? 'bg-warning' : 'bg-danger') }}">
-                                            {{ $product->stok }}
-                                        </span>
-                                    </small>
-                                </div>
-                                <button class="btn btn-danger btn-sm rounded-circle cart-button" 
-                                        data-product-id="{{ $product->id }}"
-                                        style="width: 40px; height: 40px;">
-                                    <i class="fas fa-cart-plus"></i>
-                                </button>
-                            </div>
-                        </div>
+            <!-- Swiper Container -->
+            <div class="swiper featured-swiper pb-5">
+                <div class="swiper-wrapper">
+                    @php
+                        $featuredProducts = \App\Models\Produk::where('status', 'tersedia')
+                            ->orderBy('created_at', 'desc')
+                            ->take(8)
+                            ->get();
+                    @endphp
+                    
+                    @foreach($featuredProducts as $product)
+                    <div class="swiper-slide h-auto px-2">
+                        @include('frontend.partials.product-card', ['product' => $product, 'noWrapper' => true])
                     </div>
+                    @endforeach
                 </div>
-                @endforeach
+                <!-- Pagination -->
+                <div class="swiper-pagination"></div>
+                <!-- Navigation -->
+                <div class="swiper-button-next text-danger"></div>
+                <div class="swiper-button-prev text-danger"></div>
+            </div>
                 
                 @if($featuredProducts->isEmpty())
                 <div class="col-12 text-center py-5">
@@ -236,7 +202,7 @@
     </section>
 
     <!-- TESTIMONIALS -->
-    <section class="py-5 bg-danger bg-opacity-5">
+    <section class="py-5 bg-light-pattern">
         <div class="container">
             <div class="row mb-5">
                 <div class="col-12 text-center">
@@ -338,7 +304,7 @@
     </section>
 
     <!-- CTA SECTION -->
-    <section class="py-5 bg-danger text-white">
+    <section class="py-5 bg-red-pattern text-white">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-8">
@@ -346,7 +312,7 @@
                     <p class="mb-0 opacity-75">Pesan sekarang dan dapatkan pengalaman kuliner yang tak terlupakan.</p>
                 </div>
                 <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
-                    <a href="{{ route('front.products') }}" class="btn btn-light btn-lg px-4 py-3 fw-bold">
+                    <a href="{{ route('front.products') }}" class="btn glass-btn px-4 py-3">
                         <i class="fas fa-shopping-cart me-2"></i>Pesan Sekarang
                     </a>
                 </div>
@@ -411,25 +377,56 @@
     .border-danger {
         border-color: #dc3545 !important;
     }
+
+    /* Red Pattern Background - More Diverse Icons */
+    .bg-red-pattern {
+        background-color: #dc3545;
+        background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.08'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm0 2c-4.97 0-9-4.03-9-9s4.03-9 9-9 9 4.03 9 9-4.03 9-9 9z'/%3E%3Cpath d='M15 15h2v2h-2zM10 10l2 2-2 2-2-2 2-2zM30 10h10v2H30v-2zm0 4h10v2H30v-2zm0 4h10v2H30v-2z'/%3E%3Cpath d='M50 30c5.523 0 10-4.477 10-10S55.523 10 50 10 40 14.477 40 20s4.477 10 10 10zm0 2c-6.627 0-12-5.373-12-12s5.373-12 12-12 12 5.373 12 12-5.373 12-12 12z'/%3E%3Cpath d='M48 20h4v6h-4zm0-8h4v6h-4zM70 15h10v20H70V15zm2 2h6v16h-6V17z'/%3E%3Cpath d='M85 45c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm0 1c-3.314 0-6-2.686-6-6s2.686-6 6-6 6 2.686 6 6-2.686 6-6 6z'/%3E%3Cpath d='M15 65l10-10 2 2-10 10-2-2zM15 55l10 10-2 2-10-10 2-2zM40 70h20v2H40v-2zm5-10h10v2H45v-2zm0 20h10v2H45v-2z'/%3E%3Cpath d='M75 80c5.523 0 10-4.477 10-10S80.523 60 75 60s-10 4.477-10 10 4.477 10 10 10zm0 2c-6.627 0-12-5.373-12-12s5.373-12 12-12 12 5.373 12 12-5.373 12-12 12z'/%3E%3C/g%3E%3C/svg%3E");
+    }
+
+    .bg-light-pattern {
+        background-color: rgba(220, 53, 69, 0.03);
+        background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23dc3545' fill-opacity='0.05'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm0 2c-4.97 0-9-4.03-9-9s4.03-9 9-9 9 4.03 9 9-4.03 9-9 9z'/%3E%3Cpath d='M15 15h2v2h-2zM10 10l2 2-2 2-2-2 2-2zM30 10h10v2H30v-2zm0 4h10v2H30v-2zm0 4h10v2H30v-2z'/%3E%3Cpath d='M50 30c5.523 0 10-4.477 10-10S55.523 10 50 10 40 14.477 40 20s4.477 10 10 10zm0 2c-6.627 0-12-5.373-12-12s5.373-12 12-12 12 5.373 12 12-5.373 12-12 12z'/%3E%3Cpath d='M48 20h4v6h-4zm0-8h4v6h-4zM70 15h10v20H70V15zm2 2h6v16h-6V17z'/%3E%3Cpath d='M85 45c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm0 1c-3.314 0-6-2.686-6-6s2.686-6 6-6 6 2.686 6 6-2.686 6-6 6z'/%3E%3Cpath d='M15 65l10-10 2 2-10 10-2-2zM15 55l10 10-2 2-10-10 2-2zM40 70h20v2H40v-2zm5-10h10v2H45v-2zm0 20h10v2H45v-2z'/%3E%3Cpath d='M75 80c5.523 0 10-4.477 10-10S80.523 60 75 60s-10 4.477-10 10 4.477 10 10 10zm0 2c-6.627 0-12-5.373-12-12s5.373-12 12-12 12 5.373 12 12-5.373 12-12 12z'/%3E%3C/g%3E%3C/svg%3E");
+    }
 </style>
 @endpush
 
 @push('scripts')
 <script>
     $(document).ready(function() {
-        // Handle add to cart button clicks
-        $('.cart-button').click(function(e) {
-            e.preventDefault();
-            var productId = $(this).data('product-id');
+        // Initialize Swiper for featured products
+        const featuredSwiper = new Swiper('.featured-swiper', {
+            // Basic settings
+            slidesPerView: 1,
+            spaceBetween: 20,
+            loop: true,
+            autoplay: {
+                delay: 2000, // Faster (2 seconds)
+                disableOnInteraction: false,
+                pauseOnMouseEnter: true
+            },
             
-            // Call global addToCart function
-            if (typeof window.addToCart === 'function') {
-                window.addToCart(productId);
-            } else {
-                // Fallback
-                alert('Produk berhasil ditambahkan ke keranjang!');
-                var currentCount = parseInt($('#cart-count').text()) || 0;
-                $('#cart-count').text(currentCount + 1);
+            // Pagination
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+                dynamicBullets: true
+            },
+            
+            // Navigation Arrows
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+            
+            // Responsive Breakpoints
+            breakpoints: {
+                576: {
+                    slidesPerView: 2,
+                },
+                992: {
+                    slidesPerView: 3, // 3 cards as requested
+                }
             }
         });
     });

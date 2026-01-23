@@ -1,97 +1,100 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('title', 'Dashboard Admin')
 
 @section('content')
-    <!-- Header -->
+    <!-- Welcome Banner -->
     <div class="row mb-4">
-        <div class="col">
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <h3 class="mb-1">Dashboard Admin</h3>
-                    <p class="text-muted mb-0">Selamat datang di sistem manajemen Pangsit Chili Oil</p>
-                </div>
-                <div class="d-flex align-items-center">
-                    <span class="badge bg-danger me-2">Live</span>
-                    <small class="text-muted">
-                        <i class="fas fa-clock me-1"></i>
-                        {{ now()->format('d F Y, H:i') }}
-                    </small>
-                </div>
+        <div class="col-12">
+            <div class="glass-card p-4">
+                <h2 class="fw-bold mb-1">Selamat Datang, {{ Auth::user()->name ?? 'Admin' }}!</h2>
+                <p class="text-muted mb-0">Berikut adalah ikhtisar performa Pangsit Chili Oil hari ini.</p>
             </div>
         </div>
     </div>
 
     <!-- Statistik Utama -->
-    <div class="row mb-4">
+    <div class="row g-4 mb-4">
         <!-- Total Pelanggan -->
-        <div class="col-md-3 mb-3">
-            <div class="card bg-primary text-white h-100">
-                <div class="card-body d-flex flex-column justify-content-between">
-                    <div class="d-flex justify-content-between align-items-start">
-                        <div>
-                            <h6 class="mb-2">Total Pelanggan</h6>
-                            <h2 class="mb-0">{{ $totalPelanggan }}</h2>
+        <div class="col-xl-3 col-md-6">
+            <div class="card h-100" style="border-left: 5px solid #0ea5e9 !important;">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <div class="rounded-circle d-flex align-items-center justify-content-center" 
+                             style="width: 50px; height: 50px; background: rgba(14, 165, 233, 0.1); color: #0ea5e9;">
+                            <i class="fas fa-users fs-4"></i>
                         </div>
-                        <i class="fas fa-users fa-2x opacity-75"></i>
                     </div>
-                    <small class="opacity-75 mt-2">
-                        {{ $pelangganAktif }} akun aktif
-                    </small>
+                    <div>
+                        <h6 class="text-muted fw-bold text-uppercase mb-1" style="font-size: 0.75rem; letter-spacing: 0.05em;">Total Pelanggan</h6>
+                        <h2 class="fw-bold mb-0 text-dark">{{ $totalPelanggan }}</h2>
+                    </div>
+                    <div class="mt-2 small text-muted">
+                        <i class="fas fa-check-circle text-success me-1"></i> {{ $pelangganAktif }} Akun Aktif
+                    </div>
                 </div>
             </div>
         </div>
         
         <!-- Total Produk -->
-        <div class="col-md-3 mb-3">
-            <div class="card bg-success text-white h-100">
-                <div class="card-body d-flex flex-column justify-content-between">
-                    <div class="d-flex justify-content-between align-items-start">
-                        <div>
-                            <h6 class="mb-2">Total Produk</h6>
-                            <h2 class="mb-0">{{ $totalProduk }}</h2>
+        <div class="col-xl-3 col-md-6">
+            <div class="card h-100" style="border-left: 5px solid var(--primary-red) !important;">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <div class="rounded-circle d-flex align-items-center justify-content-center" 
+                             style="width: 50px; height: 50px; background: rgba(220, 53, 69, 0.1); color: var(--primary-red);">
+                            <i class="fas fa-box fs-4"></i>
                         </div>
-                        <i class="fas fa-box fa-2x opacity-75"></i>
                     </div>
-                    <small class="opacity-75 mt-2">
-                        {{ $produkTersedia }} tersedia
-                    </small>
+                    <div>
+                        <h6 class="text-muted fw-bold text-uppercase mb-1" style="font-size: 0.75rem; letter-spacing: 0.05em;">Total Produk</h6>
+                        <h2 class="fw-bold mb-0 text-dark">{{ $totalProduk }}</h2>
+                    </div>
+                    <div class="mt-2 small text-muted">
+                        <i class="fas fa-warehouse text-primary me-1"></i> {{ $produkTersedia }} Tersedia
+                    </div>
                 </div>
             </div>
         </div>
         
         <!-- Total Kategori -->
-        <div class="col-md-3 mb-3">
-            <div class="card bg-info text-white h-100">
-                <div class="card-body d-flex flex-column justify-content-between">
-                    <div class="d-flex justify-content-between align-items-start">
-                        <div>
-                            <h6 class="mb-2">Total Kategori</h6>
-                            <h2 class="mb-0">{{ $totalKategori }}</h2>
+        <div class="col-xl-3 col-md-6">
+            <div class="card h-100" style="border-left: 5px solid var(--accent-orange) !important;">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <div class="rounded-circle d-flex align-items-center justify-content-center" 
+                             style="width: 50px; height: 50px; background: rgba(253, 126, 20, 0.1); color: var(--accent-orange);">
+                            <i class="fas fa-layer-group fs-4"></i>
                         </div>
-                        <i class="fas fa-tags fa-2x opacity-75"></i>
                     </div>
-                    <small class="opacity-75 mt-2">
-                        {{ $produkTerbanyak }} produk terbanyak
-                    </small>
+                    <div>
+                        <h6 class="text-muted fw-bold text-uppercase mb-1" style="font-size: 0.75rem; letter-spacing: 0.05em;">Total Kategori</h6>
+                        <h2 class="fw-bold mb-0 text-dark">{{ $totalKategori }}</h2>
+                    </div>
+                    <div class="mt-2 small text-muted">
+                        <i class="fas fa-chart-line text-warning me-1"></i> {{ $produkTerbanyak }} Produk Terbanyak
+                    </div>
                 </div>
             </div>
         </div>
         
-        <!-- Total Admin/Kasir -->
-        <div class="col-md-3 mb-3">
-            <div class="card bg-warning text-white h-100">
-                <div class="card-body d-flex flex-column justify-content-between">
-                    <div class="d-flex justify-content-between align-items-start">
-                        <div>
-                            <h6 class="mb-2">Total Staff</h6>
-                            <h2 class="mb-0">{{ $totalAdmin + $totalKasir }}</h2>
+        <!-- Total Staff -->
+        <div class="col-xl-3 col-md-6">
+            <div class="card h-100" style="border-left: 5px solid #8b5cf6 !important;">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <div class="rounded-circle d-flex align-items-center justify-content-center" 
+                             style="width: 50px; height: 50px; background: rgba(139, 92, 246, 0.1); color: #8b5cf6;">
+                            <i class="fas fa-user-shield fs-4"></i>
                         </div>
-                        <i class="fas fa-user-shield fa-2x opacity-75"></i>
                     </div>
-                    <small class="opacity-75 mt-2">
-                        {{ $totalAdmin }} admin, {{ $totalKasir }} kasir
-                    </small>
+                    <div>
+                        <h6 class="text-muted fw-bold text-uppercase mb-1" style="font-size: 0.75rem; letter-spacing: 0.05em;">Total Staff</h6>
+                        <h2 class="fw-bold mb-0 text-dark">{{ $totalAdmin + $totalKasir }}</h2>
+                    </div>
+                    <div class="mt-2 small text-muted">
+                        {{ $totalAdmin }} Admin, {{ $totalKasir }} Kasir
+                    </div>
                 </div>
             </div>
         </div>

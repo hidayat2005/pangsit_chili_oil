@@ -244,15 +244,7 @@
             }
         });
         
-        // Handle related product cart buttons
-        $('.cart-button').click(function(e) {
-            e.preventDefault();
-            const productId = $(this).data('product-id');
-            
-            if (typeof window.addToCart === 'function') {
-                window.addToCart(productId, 1);
-            }
-        });
+        // Page specific initialization if needed
     });
 </script>
 @endpush

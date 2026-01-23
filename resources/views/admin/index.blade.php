@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('title', 'Manajemen Admin/Kasir')
 
@@ -6,81 +6,65 @@
     <!-- Header -->
     <div class="row mb-4">
         <div class="col">
-            <div class="d-flex justify-content-between align-items-center">
+            <div class="glass-card p-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
                 <div>
-                    <h3 class="mb-1">Daftar Admin/Kasir</h3>
-                    <p class="text-muted mb-0">Kelola data admin dan kasir Pangsit Chili Oil</p>
+                    <h2 class="fw-bold mb-1">Manajemen Admin & Kasir</h2>
+                    <p class="text-muted mb-0">Kelola hak akses dan data staff Pangsit Chili Oil Anda.</p>
                 </div>
                 <a href="{{ route('admin.users.create') }}" class="btn btn-primary">
-                    <i class="fas fa-plus me-1"></i>Tambah Admin/Kasir
+                    <i class="fas fa-plus me-2"></i>Tambah Staff Baru
                 </a>
             </div>
         </div>
     </div>
 
     <!-- Statistik -->
-    <div class="row mb-4">
-        <div class="col-md-3 mb-3">
-            <div class="card bg-danger text-white h-100">
-                <div class="card-body d-flex flex-column justify-content-between">
-                    <div class="d-flex justify-content-between align-items-start">
-                        <div>
-                            <h6 class="mb-2">Total Admin</h6>
-                            <h2 class="mb-0">{{ $admins->where('role', 'admin')->count() }}</h2>
-                        </div>
-                        <i class="fas fa-user-shield fa-2x opacity-75"></i>
+    <div class="row g-4 mb-4">
+        <div class="col-xl-3 col-md-6">
+            <div class="card h-100" style="border-left: 5px solid #ef4444 !important;">
+                <div class="card-body p-4 text-center">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" 
+                         style="width: 50px; height: 50px; background: rgba(239, 68, 68, 0.1); color: #ef4444;">
+                        <i class="fas fa-user-shield fs-4"></i>
                     </div>
-                    <small class="opacity-75 mt-2">
-                        Admin sistem
-                    </small>
+                    <h6 class="text-muted fw-bold text-uppercase mb-1" style="font-size: 0.7rem;">Admin</h6>
+                    <h3 class="fw-bold mb-0">{{ $admins->where('role', 'admin')->count() }}</h3>
                 </div>
             </div>
         </div>
-        <div class="col-md-3 mb-3">
-            <div class="card bg-info text-white h-100">
-                <div class="card-body d-flex flex-column justify-content-between">
-                    <div class="d-flex justify-content-between align-items-start">
-                        <div>
-                            <h6 class="mb-2">Total Kasir</h6>
-                            <h2 class="mb-0">{{ $admins->where('role', 'kasir')->count() }}</h2>
-                        </div>
-                        <i class="fas fa-cash-register fa-2x opacity-75"></i>
+        <div class="col-xl-3 col-md-6">
+            <div class="card h-100" style="border-left: 5px solid #06b6d4 !important;">
+                <div class="card-body p-4 text-center">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" 
+                         style="width: 50px; height: 50px; background: rgba(6, 182, 212, 0.1); color: #06b6d4;">
+                        <i class="fas fa-cash-register fs-4"></i>
                     </div>
-                    <small class="opacity-75 mt-2">
-                        Kasir aktif
-                    </small>
+                    <h6 class="text-muted fw-bold text-uppercase mb-1" style="font-size: 0.7rem;">Kasir</h6>
+                    <h3 class="fw-bold mb-0">{{ $admins->where('role', 'kasir')->count() }}</h3>
                 </div>
             </div>
         </div>
-        <div class="col-md-3 mb-3">
-            <div class="card bg-success text-white h-100">
-                <div class="card-body d-flex flex-column justify-content-between">
-                    <div class="d-flex justify-content-between align-items-start">
-                        <div>
-                            <h6 class="mb-2">Aktif</h6>
-                            <h2 class="mb-0">{{ $admins->where('status', 'aktif')->count() }}</h2>
-                        </div>
-                        <i class="fas fa-check-circle fa-2x opacity-75"></i>
+        <div class="col-xl-3 col-md-6">
+            <div class="card h-100" style="border-left: 5px solid #10b981 !important;">
+                <div class="card-body p-4 text-center">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" 
+                         style="width: 50px; height: 50px; background: rgba(16, 185, 129, 0.1); color: #10b981;">
+                        <i class="fas fa-check-circle fs-4"></i>
                     </div>
-                    <small class="opacity-75 mt-2">
-                        Pengguna aktif
-                    </small>
+                    <h6 class="text-muted fw-bold text-uppercase mb-1" style="font-size: 0.7rem;">Aktif</h6>
+                    <h3 class="fw-bold mb-0">{{ $admins->where('status', 'aktif')->count() }}</h3>
                 </div>
             </div>
         </div>
-        <div class="col-md-3 mb-3">
-            <div class="card bg-warning text-white h-100">
-                <div class="card-body d-flex flex-column justify-content-between">
-                    <div class="d-flex justify-content-between align-items-start">
-                        <div>
-                            <h6 class="mb-2">Nonaktif</h6>
-                            <h2 class="mb-0">{{ $admins->where('status', 'nonaktif')->count() }}</h2>
-                        </div>
-                        <i class="fas fa-user-slash fa-2x opacity-75"></i>
+        <div class="col-xl-3 col-md-6">
+            <div class="card h-100" style="border-left: 5px solid #f59e0b !important;">
+                <div class="card-body p-4 text-center">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" 
+                         style="width: 50px; height: 50px; background: rgba(245, 158, 11, 0.1); color: #f59e0b;">
+                        <i class="fas fa-user-slash fs-4"></i>
                     </div>
-                    <small class="opacity-75 mt-2">
-                        Pengguna nonaktif
-                    </small>
+                    <h6 class="text-muted fw-bold text-uppercase mb-1" style="font-size: 0.7rem;">Nonaktif</h6>
+                    <h3 class="fw-bold mb-0">{{ $admins->where('status', 'nonaktif')->count() }}</h3>
                 </div>
             </div>
         </div>
@@ -89,154 +73,103 @@
     <!-- Main Content -->
     <div class="row">
         <div class="col-12">
-            <!-- Admin Table Card -->
-            <div class="card shadow-sm border-0">
-                <!-- Card Header -->
-                <div class="card-header bg-white py-3 border-bottom">
-                    <div class="row align-items-center">
-                        <div class="col-md-6">
-                            <h5 class="mb-0">Semua Admin/Kasir</h5>
-                        </div>
-                        <div class="col-md-6 text-md-end">
-                            <span class="text-muted">
-                                Total: <strong>{{ $admins->count() }}</strong> orang
-                            </span>
-                        </div>
-                    </div>
+            <div class="table-card p-0">
+                <div class="card-header bg-white py-4 px-4 border-bottom d-flex align-items-center justify-content-between flex-wrap gap-2">
+                    <h5 class="fw-bold mb-0 text-dark">Daftar Staff</h5>
+                    <div class="badge bg-light text-dark px-3 py-2 border">Total: {{ $admins->count() }} Orang</div>
                 </div>
 
-                <!-- Card Body -->
-                <div class="card-body p-0">
-                    <div class="table-responsive">
-                        <table class="table table-hover mb-0">
-                            <thead class="table-light">
-                                <tr>
-                                    <th class="py-3 px-4" width="50">No</th>
-                                    <th class="py-3 px-4">Nama Lengkap</th>
-                                    <th class="py-3 px-4" width="120">Username</th>
-                                    <th class="py-3 px-4" width="150">Email</th>
-                                    <th class="py-3 px-4" width="100">Role</th>
-                                    <th class="py-3 px-4" width="100">Status</th>
-                                    <th class="py-3 px-4 text-center" width="140">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @php
-                                    // Hitung nomor urut berdasarkan pagination atau collection
-                                    $startNumber = 1;
-                                    if ($admins instanceof \Illuminate\Pagination\LengthAwarePaginator) {
-                                        $startNumber = ($admins->currentPage() - 1) * $admins->perPage() + 1;
-                                    }
-                                @endphp
-                                
-                                @forelse($admins as $index => $admin)
-                                <tr>
-                                    <td class="px-4 py-3 align-middle">
-                                        {{ $startNumber + $index }}
-                                    </td>
-                                    <td class="px-4 py-3 align-middle">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th class="text-center" width="60">No</th>
+                                <th>Nama Staff</th>
+                                <th>Account Details</th>
+                                <th class="text-center" width="120">Role</th>
+                                <th class="text-center" width="120">Status</th>
+                                <th class="text-center" width="150">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @php
+                                $startNumber = 1;
+                                if ($admins instanceof \Illuminate\Pagination\LengthAwarePaginator) {
+                                    $startNumber = ($admins->currentPage() - 1) * $admins->perPage() + 1;
+                                }
+                            @endphp
+                            
+                            @forelse($admins as $index => $admin)
+                            <tr>
+                                <td class="text-center fw-bold text-muted">
+                                    {{ $startNumber + $index }}
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="user-avatar text-uppercase bg-light text-primary fw-bold" style="width: 38px; height: 38px;">
+                                            {{ substr($admin->nama_lengkap, 0, 1) }}
+                                        </div>
                                         <div>
-                                            <strong class="d-block mb-1">{{ $admin->nama_lengkap }}</strong>
-                                            <small class="text-muted">{{ $admin->nomor_telepon }}</small>
+                                            <div class="fw-bold">{{ $admin->nama_lengkap }}</div>
+                                            <small class="text-muted"><i class="fas fa-phone-alt me-1"></i> {{ $admin->nomor_telepon }}</small>
                                         </div>
-                                    </td>
-                                    <td class="px-4 py-3 align-middle">
-                                        <code>{{ $admin->username }}</code>
-                                    </td>
-                                    <td class="px-4 py-3 align-middle">
-                                        <small>{{ $admin->email }}</small>
-                                    </td>
-                                    <td class="px-4 py-3 align-middle">
-                                        @if($admin->role == 'admin')
-                                            <span class="badge bg-danger">Admin</span>
-                                        @else
-                                            <span class="badge bg-info">Kasir</span>
-                                        @endif
-                                    </td>
-                                    <td class="px-4 py-3 align-middle">
-                                        @if($admin->status == 'aktif')
-                                            <span class="badge bg-success">Aktif</span>
-                                        @else
-                                            <span class="badge bg-danger">Nonaktif</span>
-                                        @endif
-                                    </td>
-                                    <td class="px-4 py-3 align-middle text-center">
-                                        <div class="btn-group btn-group-sm">
-                                            <a href="{{ route('admin.users.show', $admin->id) }}" 
-                                               class="btn btn-outline-info px-3" 
-                                               title="Detail">
-                                                <i class="fas fa-eye"></i>
-                                            </a>
-                                            <a href="{{ route('admin.users.edit', $admin->id) }}" 
-                                               class="btn btn-outline-warning px-3" 
-                                               title="Edit">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
-                                            <form action="{{ route('admin.users.destroy', $admin->id) }}" method="POST" 
-                                                  class="d-inline">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" 
-                                                        class="btn btn-outline-danger px-3" 
-                                                        title="Hapus">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
-                                            </form>
-                                        </div>
-                                    </td>
-                                </tr>
-                                @empty
-                                <tr>
-                                    <td colspan="7" class="text-center py-5">
-                                        <div class="py-4">
-                                            <i class="fas fa-users fa-3x text-muted mb-3"></i>
-                                            <h5 class="text-muted">Belum ada admin/kasir</h5>
-                                            <p class="text-muted mb-4">Mulai dengan menambahkan admin pertama</p>
-                                            <a href="{{ route('admin.users.create') }}" class="btn btn-primary">
-                                                <i class="fas fa-plus me-2"></i>Tambah Admin
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <!-- Pagination - Hanya tampilkan jika $admins adalah Paginator -->
-                    @if($admins instanceof \Illuminate\Pagination\LengthAwarePaginator && $admins->hasPages())
-                    <div class="card-footer bg-white border-top py-3">
-                        <div class="row align-items-center">
-                            <div class="col-md-6">
-                                <div class="text-muted">
-                                    Menampilkan {{ $admins->firstItem() }} sampai {{ $admins->lastItem() }} 
-                                    dari {{ $admins->total() }} admin/kasir
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="d-flex justify-content-md-end">
-                                    {{ $admins->links() }}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    @endif
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="small fw-bold">@ {{ $admin->username }}</div>
+                                    <div class="small text-muted">{{ $admin->email }}</div>
+                                </td>
+                                <td class="text-center">
+                                    @if($admin->role == 'admin')
+                                        <span class="badge bg-danger rounded-pill px-3">Admin</span>
+                                    @else
+                                        <span class="badge bg-info text-dark rounded-pill px-3">Kasir</span>
+                                    @endif
+                                </td>
+                                <td class="text-center">
+                                    @if($admin->status == 'aktif')
+                                        <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-3">Aktif</span>
+                                    @else
+                                        <span class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 px-3">Nonaktif</span>
+                                    @endif
+                                </td>
+                                <td class="text-center">
+                                    <div class="d-flex justify-content-center gap-2">
+                                        <a href="{{ route('admin.users.edit', $admin->id) }}" class="btn btn-sm btn-light border" title="Edit">
+                                            <i class="fas fa-edit text-warning"></i>
+                                        </a>
+                                        <form action="{{ route('admin.users.destroy', $admin->id) }}" method="POST" class="d-inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-sm btn-light border" title="Hapus">
+                                                <i class="fas fa-trash text-danger"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            @empty
+                            <tr>
+                                <td colspan="6" class="text-center py-5">
+                                    <div class="mb-3"><i class="fas fa-users-slash fa-4x text-muted opacity-25"></i></div>
+                                    <h5 class="text-muted">Oops! Belum ada staff.</h5>
+                                    <a href="{{ route('admin.users.create') }}" class="btn btn-primary mt-3">Tambah Staff Pertama</a>
+                                </td>
+                            </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
                 </div>
+
+                @if($admins instanceof \Illuminate\Pagination\LengthAwarePaginator && $admins->hasPages())
+                <div class="px-4 py-3 border-top">
+                    <div class="d-flex justify-content-between align-items-center flex-wrap">
+                        <small class="text-muted">Menampilkan {{ $admins->firstItem() }}-{{ $admins->lastItem() }} dari {{ $admins->total() }} staff</small>
+                        {{ $admins->links() }}
+                    </div>
+                </div>
+                @endif
             </div>
         </div>
     </div>
-
-<script>
-    // Script sederhana untuk konfirmasi hapus
-    document.addEventListener('DOMContentLoaded', function() {
-        const deleteForms = document.querySelectorAll('form[action*="destroy"]');
-        deleteForms.forEach(form => {
-            form.addEventListener('submit', function(e) {
-                if (!confirm('Apakah Anda yakin ingin menghapus admin ini?')) {
-                    e.preventDefault();
-                }
-            });
-        });
-    });
-</script>
 @endsection

@@ -4,7 +4,7 @@
 
 @section('content')
     <!-- HERO BANNER PRODUK -->
-    <section class="hero-section" style="background: linear-gradient(rgba(74, 44, 42, 0.9), rgba(178, 34, 34, 0.8)), url('https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?ixlib=rb-4.0.3&auto=format&fit=crop&w=2080&q=80'); background-size: cover; background-position: center;">
+    <section class="hero-section" style="background: linear-gradient(rgba(74, 44, 42, 0.9), rgba(178, 34, 34, 0.8)), url('{{ asset('images/All Pangsit Chili Oil .webp') }}'); background-size: cover; background-position: center;">
         <div class="container">
             <div class="row min-vh-50 align-items-center">
                 <div class="col-lg-8 mx-auto text-center text-white">
@@ -161,11 +161,19 @@
                     <div class="col-lg-3 col-md-6">
                         <a href="{{ route('front.products', ['category' => $category->id]) }}" 
                            class="text-decoration-none">
-                            <div class="card border-0 shadow-sm h-100 text-center p-4 category-card">
+                            <div class="card glass-card h-100 text-center p-4 category-card">
                                 <div class="icon-wrapper mb-3">
                                     <div class="rounded-circle bg-danger bg-opacity-10 d-inline-flex align-items-center justify-content-center" 
                                          style="width: 100px; height: 100px;">
-                                        <i class="fas fa-utensils fa-3x text-danger"></i>
+                                        @php
+                                            $icon = 'fa-utensils';
+                                            $name = strtolower($category->nama_kategori);
+                                            if (str_contains($name, 'original')) $icon = 'fa-utensils';
+                                            elseif (str_contains($name, 'pedas')) $icon = 'fa-pepper-hot';
+                                            elseif (str_contains($name, 'chili')) $icon = 'fa-fire-alt';
+                                            elseif (str_contains($name, 'kombo') || str_contains($name, 'paket')) $icon = 'fa-boxes';
+                                        @endphp
+                                        <i class="fas {{ $icon }} fa-3x text-danger"></i>
                                     </div>
                                 </div>
                                 <h5 class="fw-bold mb-2 text-dark">{{ $category->nama_kategori }}</h5>
@@ -221,19 +229,7 @@
 @push('scripts')
 <script>
     $(document).ready(function() {
-        // Handle add to cart button clicks
-        $('.cart-button').click(function(e) {
-            e.preventDefault();
-            var productId = $(this).data('product-id');
-            
-            if (typeof window.addToCart === 'function') {
-                window.addToCart(productId);
-            } else {
-                alert('Produk berhasil ditambahkan ke keranjang!');
-                var currentCount = parseInt($('#cart-count').text()) || 0;
-                $('#cart-count').text(currentCount + 1);
-            }
-        });
+        // Page specific initialization if needed
     });
 </script>
 @endpush

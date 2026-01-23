@@ -1,5 +1,8 @@
 <script>
     $(document).ready(function() {
+        // Shared lock to prevent concurrent requests for the same product
+        let cartLocks = {};
+
         // Update cart count on page load
         function updateCartCount() {
             $.ajax({
@@ -7,11 +10,14 @@
                 method: 'GET',
                 success: function(response) {
                     if (response && response.count !== undefined) {
-                        $('#cart-count').text(response.count);
+                        const cartCount = $('#cart-count');
+                        cartCount.text(response.count);
+                        if (response.count == 0) {
+                            cartCount.addClass('d-none');
+                        } else {
+                            cartCount.removeClass('d-none');
+                        }
                     }
-                },
-                error: function() {
-                    $('#cart-count').text('0');
                 }
             });
         }
@@ -20,12 +26,26 @@
         updateCartCount();
         
         // Add to cart function (global)
-        window.addToCart = function(productId, quantity) {
+        window.addToCart = function(productId, quantity, shouldRedirect = false) {
+            // Prevent duplicate requests
+            if (cartLocks[productId]) return;
+            cartLocks[productId] = true;
+
             // Set default quantity to 1 if not provided
-            if (!quantity || quantity < 1) {
-                quantity = 1;
-            }
+            quantity = parseInt(quantity) || 1;
             
+            // Visual feedback - handle both button types
+            let cartBtn = $(`.cart-button[data-product-id="${productId}"]`);
+            let buyBtn = $(`.buy-button[data-product-id="${productId}"]`);
+            let originalCartHtml = cartBtn.html();
+            let originalBuyHtml = buyBtn.html();
+            
+            if (shouldRedirect) {
+                buyBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i>');
+            } else {
+                cartBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i>');
+            }
+
             $.ajax({
                 url: '{{ route("cart.add") }}',
                 method: 'POST',
@@ -37,42 +57,65 @@
                 success: function(response) {
                     updateCartCount();
                     
-                    // Show success notification
-                    if (response && response.message) {
-                        var toast = '<div class="alert alert-success alert-dismissible fade show position-fixed" style="top: 20px; right: 20px; z-index: 9999;">' +
-                            '<i class="fas fa-check-circle me-2"></i>' + response.message +
-                            '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>' +
-                            '</div>';
-                        
-                        $('body').append(toast);
-                        
-                        // Auto remove after 3 seconds
-                        setTimeout(function() {
-                            $('.alert').alert('close');
-                        }, 3000);
+                    if (shouldRedirect) {
+                        window.location.href = '{{ route("cart.index") }}';
+                    } else if (response && response.message) {
+                        showNotification(response.message, 'success');
                     }
                 },
                 error: function(xhr) {
-                    var errorMessage = 'Gagal menambahkan ke keranjang';
-                    
-                    if (xhr.responseJSON && xhr.responseJSON.message) {
-                        errorMessage = xhr.responseJSON.message;
-                    }
-                    
-                    // Show error notification
-                    var toast = '<div class="alert alert-danger alert-dismissible fade show position-fixed" style="top: 20px; right: 20px; z-index: 9999;">' +
-                        '<i class="fas fa-exclamation-circle me-2"></i>' + errorMessage +
-                        '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>' +
-                        '</div>';
-                    
-                    $('body').append(toast);
-                    
-                    // Auto remove after 5 seconds
-                    setTimeout(function() {
-                        $('.alert').alert('close');
-                    }, 5000);
+                    let errorMessage = xhr.responseJSON?.message || 'Gagal menambahkan ke keranjang';
+                    showNotification(errorMessage, 'danger');
+                },
+                complete: function() {
+                    // Release lock
+                    cartLocks[productId] = false;
+                    cartBtn.prop('disabled', false).html(originalCartHtml);
+                    buyBtn.prop('disabled', false).html(originalBuyHtml);
                 }
             });
         };
+
+        // Helper for notifications
+        window.showNotification = function(message, type) {
+            const container = $('#toast-container');
+            if (!container.length) return;
+
+            let icon = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle';
+            let title = type === 'success' ? 'Berhasil!' : 'Gagal!';
+            
+            let toast = `<div class="alert alert-${type} alert-dismissible fade show border-0 shadow-sm slide-in-left custom-toast" role="alert">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0 me-3">
+                        <i class="fas ${icon} fa-2x text-${type}"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold mb-1 text-${type}">${title}</h6>
+                        <p class="mb-0 text-dark small">${message}</p>
+                    </div>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>`;
+            
+            container.append(toast);
+        }
+
+        // Centralized Event Listener for all "Add to Cart" buttons
+        $(document).on('click', '.cart-button', function(e) {
+            e.preventDefault();
+            let productId = $(this).data('product-id');
+            if (productId) {
+                window.addToCart(productId, 1, false);
+            }
+        });
+
+        // Centralized Event Listener for all "Buy Now" buttons
+        $(document).on('click', '.buy-button', function(e) {
+            e.preventDefault();
+            let productId = $(this).data('product-id');
+            if (productId) {
+                window.addToCart(productId, 1, true);
+            }
+        });
     });
 </script>

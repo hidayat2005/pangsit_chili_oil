@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('title', 'Manajemen Pelanggan')
 
@@ -6,63 +6,65 @@
     <!-- Header -->
     <div class="row mb-4">
         <div class="col">
-            <div class="d-flex justify-content-between align-items-center">
+            <div class="glass-card p-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
                 <div>
-                    <h3 class="mb-1">Daftar Pelanggan</h3>
-                    <p class="text-muted mb-0">Kelola data pelanggan Pangsit Chili Oil</p>
+                    <h2 class="fw-bold mb-1">Daftar Pelanggan</h2>
+                    <p class="text-muted mb-0">Kelola dan pantau basis pelanggan Pangsit Chili Oil Anda.</p>
                 </div>
-                <!-- TIDAK ADA tombol Tambah Pelanggan karena pelanggan isi sendiri -->
+                <div class="badge bg-primary px-3 py-2 rounded-pill">
+                    <i class="fas fa-users me-2"></i> {{ $pelanggans->total() }} Pelanggan Terdaftar
+                </div>
             </div>
         </div>
     </div>
 
     <!-- Statistik Pelanggan -->
-    <div class="row mb-4">
-        <div class="col-md-4 mb-3">
-            <div class="card bg-primary text-white h-100">
-                <div class="card-body d-flex flex-column justify-content-between">
-                    <div class="d-flex justify-content-between align-items-start">
-                        <div>
-                            <h6 class="mb-2">Total Pelanggan</h6>
-                            <h2 class="mb-0">{{ $totalPelanggan }}</h2>
+    <div class="row g-4 mb-4">
+        <div class="col-xl-4 col-md-6">
+            <div class="card h-100" style="border-left: 5px solid #3b82f6 !important;">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <div class="rounded-circle d-flex align-items-center justify-content-center" 
+                             style="width: 50px; height: 50px; background: rgba(59, 130, 246, 0.1); color: #3b82f6;">
+                            <i class="fas fa-users fs-4"></i>
                         </div>
-                        <i class="fas fa-users fa-2x opacity-75"></i>
                     </div>
-                    <small class="opacity-75 mt-2">
-                        Jumlah semua pelanggan
-                    </small>
+                    <div>
+                        <h6 class="text-muted fw-bold text-uppercase mb-1" style="font-size: 0.75rem; letter-spacing: 0.05em;">Total Pelanggan</h6>
+                        <h2 class="fw-bold mb-0 text-dark">{{ $totalPelanggan }}</h2>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-4 mb-3">
-            <div class="card bg-success text-white h-100">
-                <div class="card-body d-flex flex-column justify-content-between">
-                    <div class="d-flex justify-content-between align-items-start">
-                        <div>
-                            <h6 class="mb-2">Pelanggan Aktif</h6>
-                            <h2 class="mb-0">{{ $pelangganAktif }}</h2>
+        <div class="col-xl-4 col-md-6">
+            <div class="card h-100" style="border-left: 5px solid #10b981 !important;">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <div class="rounded-circle d-flex align-items-center justify-content-center" 
+                             style="width: 50px; height: 50px; background: rgba(16, 185, 129, 0.1); color: #10b981;">
+                            <i class="fas fa-user-check fs-4"></i>
                         </div>
-                        <i class="fas fa-user-check fa-2x opacity-75"></i>
                     </div>
-                    <small class="opacity-75 mt-2">
-                        Memiliki akun aktif
-                    </small>
+                    <div>
+                        <h6 class="text-muted fw-bold text-uppercase mb-1" style="font-size: 0.75rem; letter-spacing: 0.05em;">Pelanggan Aktif</h6>
+                        <h2 class="fw-bold mb-0 text-dark">{{ $pelangganAktif }}</h2>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-4 mb-3">
-            <div class="card bg-info text-white h-100">
-                <div class="card-body d-flex flex-column justify-content-between">
-                    <div class="d-flex justify-content-between align-items-start">
-                        <div>
-                            <h6 class="mb-2">Total Pesanan</h6>
-                            <h2 class="mb-0">{{ $totalPesanan ?? 0 }}</h2>
+        <div class="col-xl-4 col-md-12">
+            <div class="card h-100" style="border-left: 5px solid #8b5cf6 !important;">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <div class="rounded-circle d-flex align-items-center justify-content-center" 
+                             style="width: 50px; height: 50px; background: rgba(139, 92, 246, 0.1); color: #8b5cf6;">
+                            <i class="fas fa-shopping-cart fs-4"></i>
                         </div>
-                        <i class="fas fa-shopping-cart fa-2x opacity-75"></i>
                     </div>
-                    <small class="opacity-75 mt-2">
-                        Total semua pesanan
-                    </small>
+                    <div>
+                        <h6 class="text-muted fw-bold text-uppercase mb-1" style="font-size: 0.75rem; letter-spacing: 0.05em;">Total Pesanan</h6>
+                        <h2 class="fw-bold mb-0 text-dark">{{ $totalPesanan ?? 0 }}</h2>
+                    </div>
                 </div>
             </div>
         </div>
@@ -71,155 +73,93 @@
     <!-- Main Content -->
     <div class="row">
         <div class="col-12">
-            <!-- Pelanggan Table Card -->
-            <div class="card shadow-sm border-0">
-                <!-- Card Header -->
-                <div class="card-header bg-white py-3 border-bottom">
-                    <div class="row align-items-center">
-                        <div class="col-md-6">
-                            <h5 class="mb-0">Semua Pelanggan</h5>
-                        </div>
-                        <div class="col-md-6 text-md-end">
-                            <span class="text-muted">
-                                Total: <strong>{{ $pelanggans->total() }}</strong> pelanggan
-                            </span>
-                        </div>
-                    </div>
+            <div class="table-card p-0">
+                <div class="card-header bg-white py-4 px-4 border-bottom">
+                    <h5 class="fw-bold mb-0">Daftar Akun Pelanggan</h5>
                 </div>
 
-                <!-- Card Body -->
-                <div class="card-body p-0">
-                    <div class="table-responsive">
-                        <table class="table table-hover mb-0">
-                            <thead class="table-light">
-                                <tr>
-                                    <th class="py-3 px-4" width="60">ID</th>
-                                    <th class="py-3 px-4">Nama Pelanggan</th>
-                                    <th class="py-3 px-4" width="180">Email</th>
-                                    <th class="py-3 px-4" width="130">Telepon</th>
-                                    <th class="py-3 px-4" width="120">Status Akun</th>
-                                    <th class="py-3 px-4 text-center" width="120">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($pelanggans as $pelanggan)
-                                <tr>
-                                    <td class="px-4 py-3 align-middle">
-                                        <strong>#{{ $pelanggan->id }}</strong>
-                                    </td>
-                                    <td class="px-4 py-3 align-middle">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th class="text-center" width="80">ID</th>
+                                <th>Nama Pelanggan</th>
+                                <th>Contact details</th>
+                                <th class="text-center" width="150">Status Akun</th>
+                                <th class="text-center" width="100">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($pelanggans as $pelanggan)
+                            <tr>
+                                <td class="text-center align-middle">
+                                    <span class="badge bg-light text-muted border px-2 py-1">#{{ $pelanggan->id }}</span>
+                                </td>
+                                <td class="align-middle">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="user-avatar text-uppercase bg-light text-success fw-bold" style="width: 38px; height: 38px;">
+                                            {{ substr($pelanggan->nama_pelanggan, 0, 1) }}
+                                        </div>
                                         <div>
-                                            <strong class="d-block mb-1">{{ $pelanggan->nama_pelanggan }}</strong>
+                                            <div class="fw-bold text-dark">{{ $pelanggan->nama_pelanggan }}</div>
                                             @if($pelanggan->alamat)
-                                                <small class="text-muted">{{ Str::limit($pelanggan->alamat, 40) }}</small>
+                                                <small class="text-muted"><i class="fas fa-map-marker-alt me-1"></i> {{ Str::limit($pelanggan->alamat, 40) }}</small>
                                             @endif
                                         </div>
-                                    </td>
-                                    <td class="px-4 py-3 align-middle">
-                                        <div class="d-flex align-items-center">
-                                            @if($pelanggan->email)
-                                                <i class="fas fa-envelope text-muted me-2"></i>
-                                                <span>{{ $pelanggan->email }}</span>
-                                            @else
-                                                <span class="text-muted">-</span>
-                                            @endif
+                                    </div>
+                                </td>
+                                <td class="align-middle">
+                                    <div class="small fw-bold"><i class="fas fa-envelope text-muted me-2"></i>{{ $pelanggan->email ?? '-' }}</div>
+                                    <div class="small"><i class="fas fa-phone-alt text-muted me-2"></i>{{ $pelanggan->nomor_telepon }}</div>
+                                </td>
+                                <td class="text-center align-middle">
+                                    @if($pelanggan->user)
+                                        <div class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-3 py-2">
+                                            <i class="fas fa-check-circle me-1"></i> Aktif
                                         </div>
-                                    </td>
-                                    <td class="px-4 py-3 align-middle">
-                                        <div class="d-flex align-items-center">
-                                            <i class="fas fa-phone text-muted me-2"></i>
-                                            <span>{{ $pelanggan->nomor_telepon }}</span>
+                                    @else
+                                        <div class="badge bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25 px-3 py-2">
+                                            <i class="fas fa-clock me-1"></i> Non-Aktif
                                         </div>
-                                    </td>
-                                    <td class="px-4 py-3 align-middle">
-                                        @if($pelanggan->user)
-                                            <span class="badge bg-success d-flex align-items-center" style="width: fit-content;">
-                                                <i class="fas fa-user-check me-1"></i>
-                                                Aktif
-                                            </span>
-                                            <small class="text-muted d-block mt-1">
-                                                {{ $pelanggan->user->email ?? '' }}
-                                            </small>
-                                        @else
-                                            <span class="badge bg-warning d-flex align-items-center" style="width: fit-content;">
-                                                <i class="fas fa-user-times me-1"></i>
-                                                Non-Aktif
-                                            </span>
-                                        @endif
-                                    </td>
-                                    <td class="px-4 py-3 align-middle text-center">
-                                        <div class="btn-group btn-group-sm">
-                                            <a href="{{ route('admin.pelanggan.show', $pelanggan->id) }}" 
-                                               class="btn btn-outline-info px-3" 
-                                               title="Detail">
-                                                <i class="fas fa-eye"></i>
-                                            </a>
-                                            <!-- TIDAK ADA tombol EDIT karena pelanggan isi sendiri -->
-                                            <form action="{{ route('admin.pelanggan.destroy', $pelanggan->id) }}" method="POST" 
-                                                  class="d-inline">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" 
-                                                        class="btn btn-outline-danger px-3" 
-                                                        title="Hapus"
-                                                        onclick="return confirm('Hapus pelanggan ini?')">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
-                                            </form>
-                                        </div>
-                                    </td>
-                                </tr>
-                                @empty
-                                <tr>
-                                    <td colspan="6" class="text-center py-5">
-                                        <div class="py-4">
-                                            <i class="fas fa-users fa-3x text-muted mb-3"></i>
-                                            <h5 class="text-muted">Belum ada pelanggan</h5>
-                                            <p class="text-muted mb-4">Pelanggan akan muncul setelah mengisi profil</p>
-                                        </div>
-                                    </td>
-                                </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <!-- Pagination -->
-                    @if($pelanggans->hasPages())
-                    <div class="card-footer bg-white border-top py-3">
-                        <div class="row align-items-center">
-                            <div class="col-md-6">
-                                <div class="text-muted">
-                                    Menampilkan {{ $pelanggans->firstItem() ?? 0 }} sampai {{ $pelanggans->lastItem() ?? 0 }} 
-                                    dari {{ $pelanggans->total() }} pelanggan
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="d-flex justify-content-md-end">
-                                    {{ $pelanggans->links() }}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    @endif
+                                    @endif
+                                </td>
+                                <td class="text-center align-middle">
+                                    <div class="d-flex justify-content-center gap-2">
+                                        <a href="{{ route('admin.pelanggan.show', $pelanggan->id) }}" class="btn btn-sm btn-light border" title="Detail">
+                                            <i class="fas fa-eye text-primary"></i>
+                                        </a>
+                                        <form action="{{ route('admin.pelanggan.destroy', $pelanggan->id) }}" method="POST" class="d-inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-sm btn-light border" title="Hapus">
+                                                <i class="fas fa-trash text-danger"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            @empty
+                            <tr>
+                                <td colspan="5" class="text-center py-5">
+                                    <div class="mb-3"><i class="fas fa-user-friends fa-4x text-muted opacity-25"></i></div>
+                                    <h5 class="text-muted">Database pelanggan masih kosong.</h5>
+                                    <p class="text-muted small">Pelanggan akan muncul setelah mereka mendaftarkan akun.</p>
+                                </td>
+                            </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
                 </div>
+
+                @if($pelanggans->hasPages())
+                <div class="px-4 py-3 border-top">
+                    <div class="d-flex justify-content-between align-items-center flex-wrap">
+                        <small class="text-muted">Menampilkan {{ $pelanggans->firstItem() }}-{{ $pelanggans->lastItem() }} dari {{ $pelanggans->total() }} pelanggan</small>
+                        {{ $pelanggans->links() }}
+                    </div>
+                </div>
+                @endif
             </div>
         </div>
     </div>
-@endsection
-
-@section('scripts')
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Konfirmasi hapus
-        const deleteForms = document.querySelectorAll('form[action*="destroy"]');
-        deleteForms.forEach(form => {
-            form.addEventListener('submit', function(e) {
-                if (!confirm('Apakah Anda yakin ingin menghapus pelanggan ini?')) {
-                    e.preventDefault();
-                }
-            });
-        });
-    });
-</script>
 @endsection
