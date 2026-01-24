@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel - @yield('title')</title>
     
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ asset('images/Logo_Chili.png') }}">
+    
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;601;700;800&display=swap" rel="stylesheet">
     <!-- Bootstrap CSS -->
@@ -90,6 +93,29 @@
             padding: 0.5rem 1rem;
             flex-grow: 1;
             overflow-y: auto;
+            overflow-x: hidden;
+            direction: rtl; /* Move scrollbar to left */
+        }
+
+        .sidebar-menu > * {
+            direction: ltr; /* Reset text direction */
+        }
+
+        .sidebar-menu::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .sidebar-menu::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .sidebar-menu::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        .sidebar-menu::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-red);
         }
 
         .menu-label {
@@ -112,6 +138,7 @@
             margin-bottom: 0.5rem;
             transition: all 0.2s ease;
             font-weight: 500;
+            position: relative;
         }
 
         .sidebar-item:hover {
@@ -260,14 +287,75 @@
 
         /* RESPONSIVE */
         @media (max-width: 991.98px) {
-            .sidebar {
-                margin-left: -260px;
-            }
-            .sidebar.show {
-                margin-left: 0;
-            }
             .main-content {
                 margin-left: 0;
+            }
+        }
+
+        /* COLLAPSED SIDEBAR (DESKTOP) */
+        @media (min-width: 992px) {
+            .sidebar {
+                transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            .sidebar.collapsed, 
+            .sidebar-collapsed .sidebar {
+                width: 80px;
+            }
+            .sidebar .brand-logo span,
+            .sidebar .sidebar-item span,
+            .sidebar .menu-label {
+                transition: opacity 0.3s, visibility 0.3s;
+                white-space: nowrap;
+            }
+            .sidebar.collapsed .brand-logo span,
+            .sidebar.collapsed .sidebar-item span,
+            .sidebar.collapsed .menu-label,
+            .sidebar-collapsed .sidebar .brand-logo span,
+            .sidebar-collapsed .sidebar .sidebar-item span,
+            .sidebar-collapsed .sidebar .menu-label {
+                opacity: 0;
+                visibility: hidden;
+                width: 0;
+                display: none;
+            }
+            .sidebar.collapsed .sidebar-header,
+            .sidebar-collapsed .sidebar .sidebar-header {
+                padding: 1.5rem 0.5rem;
+                transition: padding 0.3s;
+            }
+            .sidebar.collapsed .sidebar-footer,
+            .sidebar-collapsed .sidebar .sidebar-footer {
+                padding: 1rem 0.5rem;
+                transition: padding 0.3s;
+            }
+            .sidebar.collapsed .sidebar-item,
+            .sidebar-collapsed .sidebar .sidebar-item {
+                justify-content: center;
+                padding: 0.75rem 0;
+                margin: 0.5rem;
+            }
+            .sidebar.collapsed .sidebar-item i,
+            .sidebar-collapsed .sidebar .sidebar-item i {
+                margin: 0;
+                font-size: 1.25rem;
+                transition: font-size 0.3s;
+            }
+            .sidebar.collapsed .sidebar-item.justify-content-between,
+            .sidebar-collapsed .sidebar .sidebar-item.justify-content-between {
+                justify-content: center !important;
+            }
+            .sidebar.collapsed .sidebar-item.justify-content-between #sidebarOrderBadge,
+            .sidebar-collapsed .sidebar .sidebar-item.justify-content-between #sidebarOrderBadge {
+                position: absolute;
+                top: 5px;
+                right: 5px;
+            }
+            .main-content {
+                transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            .main-content.collapsed,
+            .sidebar-collapsed .main-content {
+                margin-left: 80px;
             }
         }
 
@@ -306,6 +394,15 @@
             100% { opacity: 0; transform: translateX(-20px); }
         }
     </style>
+    <script>
+        // Check sidebar state immediately to prevent flash
+        (function() {
+            const isCollapsed = localStorage.getItem('admin_sidebar_collapsed') === 'true';
+            if (isCollapsed && window.innerWidth >= 992) {
+                document.documentElement.classList.add('sidebar-collapsed');
+            }
+        })();
+    </script>
     @stack('styles')
 </head>
 <body>
@@ -345,7 +442,7 @@
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <a href="{{ route('admin.dashboard') }}" class="brand-logo">
-                <i class="fas fa-pepper-hot"></i>
+                <img src="{{ asset('images/Logo_Chili.png') }}" alt="Logo" style="width: 32px; height: 32px; object-fit: contain;" class="me-2">
                 <span>PANGSIT CP</span>
             </a>
         </div>
@@ -412,7 +509,7 @@
         <!-- Topbar -->
         <div class="topbar">
             <div class="d-flex align-items-center gap-3">
-                <button class="btn btn-sm d-lg-none border" id="sidebarToggle">
+                <button class="btn btn-sm border" id="sidebarToggle">
                     <i class="fas fa-bars"></i>
                 </button>
                 <h1 class="page-title">@yield('title', 'Admin Dashboard')</h1>
@@ -474,9 +571,33 @@
             });
         }
 
-        // Sidebar Toggle for Mobile
+        // Sidebar Toggle Logic (Desktop & Mobile)
         $('#sidebarToggle').on('click', function() {
-            $('#sidebar').toggleClass('show');
+            if ($(window).width() >= 992) {
+                // Desktop Toggle
+                $('#sidebar').toggleClass('collapsed');
+                $('.main-content').toggleClass('collapsed');
+                $('html').toggleClass('sidebar-collapsed');
+                
+                // Save preference
+                const isCollapsed = $('#sidebar').hasClass('collapsed') || $('html').hasClass('sidebar-collapsed');
+                localStorage.setItem('admin_sidebar_collapsed', isCollapsed);
+            } else {
+                // Mobile Toggle
+                $('#sidebar').toggleClass('show');
+            }
+        });
+
+        // Apply saved preference on page load
+        $(document).ready(function() {
+            if ($(window).width() >= 992) {
+                const isCollapsed = localStorage.getItem('admin_sidebar_collapsed') === 'true';
+                if (isCollapsed) {
+                    $('#sidebar').addClass('collapsed');
+                    $('.main-content').addClass('collapsed');
+                    $('html').addClass('sidebar-collapsed');
+                }
+            }
         });
 
         // Common delete confirmation

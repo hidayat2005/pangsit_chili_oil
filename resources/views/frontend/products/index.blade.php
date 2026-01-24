@@ -7,12 +7,12 @@
     <section class="hero-section" style="background: linear-gradient(rgba(74, 44, 42, 0.9), rgba(178, 34, 34, 0.8)), url('{{ asset('images/All Pangsit Chili Oil .webp') }}'); background-size: cover; background-position: center;">
         <div class="container">
             <div class="row min-vh-50 align-items-center">
-                <div class="col-lg-8 mx-auto text-center text-white">
+                <div class="col-lg-8 mx-auto text-center text-white" data-aos="fade-up">
                     <h1 class="display-4 fw-bold mb-4">Menu <span class="text-warning">Pangsit Chili Oil</span></h1>
                     <p class="lead mb-4">Temukan berbagai varian pangsit crispy dengan chili oil autentik yang menggugah selera.</p>
                     
                     <!-- Search Form -->
-                    <div class="row justify-content-center">
+                    <div class="row justify-content-center" data-aos="zoom-in" data-aos-delay="200">
                         <div class="col-lg-8">
                             <form action="{{ route('front.products') }}" method="GET" class="bg-white rounded-pill p-2 shadow">
                                 <div class="input-group">
@@ -36,7 +36,7 @@
     <!-- PRODUCTS SECTION -->
     <section class="py-5 bg-light">
         <div class="container">
-            <div class="row mb-5">
+            <div class="row mb-5" data-aos="fade-up">
                 <div class="col-12">
                     <!-- Filter & Sort -->
                     <div class="row align-items-center">
@@ -147,7 +147,7 @@
     <!-- CATEGORIES SECTION -->
     <section class="py-5 bg-white">
         <div class="container">
-            <div class="row mb-5">
+            <div class="row mb-5" data-aos="fade-up">
                 <div class="col-12 text-center">
                     <span class="badge bg-danger rounded-pill px-3 py-2 mb-3">Kategori</span>
                     <h2 class="fw-bold mb-3 text-danger">Kategori Produk</h2>
@@ -158,7 +158,7 @@
             <div class="row g-4">
                 @if(isset($categories) && $categories->count() > 0)
                     @foreach($categories as $category)
-                    <div class="col-lg-3 col-md-6">
+                    <div class="col-lg-3 col-md-6" data-aos="zoom-in">
                         <a href="{{ route('front.products', ['category' => $category->id]) }}" 
                            class="text-decoration-none">
                             <div class="card glass-card h-100 text-center p-4 category-card">

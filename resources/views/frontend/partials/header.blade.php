@@ -3,7 +3,7 @@
         <div class="container">
             <!-- Logo -->
             <a class="navbar-brand" href="{{ route('home') }}">
-                <i class="fas fa-pepper-hot"></i>
+                <img src="{{ asset('images/Logo_Chili.png') }}" alt="Logo" style="height: 40px;" class="me-2">
                 PANGSIT CHILI OIL
             </a>
             
@@ -16,7 +16,7 @@
             <div class="collapse navbar-collapse" id="navbarMain">
                 <ul class="navbar-nav mx-auto">
                     <li class="nav-item">
-                        <a class="nav-link {{ request()->is('/') ? 'active' : '' }}" href="{{ route('home') }}">Home</a>
+                        <a class="nav-link {{ request()->is('/') ? 'active' : '' }}" href="{{ route('home') }}">Beranda</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {{ request()->is('produk*') ? 'active' : '' }}" href="{{ route('front.products') }}">Produk</a>

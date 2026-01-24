@@ -7,8 +7,19 @@
 <!-- Swiper.js -->
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
+<!-- AOS Animation JS -->
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
 <!-- Global scripts -->
 <script>
+    // Inisialisasi AOS
+    AOS.init({
+        duration: 1000,
+        once: false,
+        mirror: true,
+        offset: 120,
+    });
+
     // Script umum yang digunakan di semua halaman
     $(document).ready(function() {
         // Navbar scroll effect - glassmorphism enhancement

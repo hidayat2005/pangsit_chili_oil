@@ -7,7 +7,7 @@
     <section class="hero-section" style="background: linear-gradient(rgba(74, 44, 42, 0.9), rgba(178, 34, 34, 0.9)), url('{{ asset('images/Image Halaman Kontak .webp') }}'); background-size: cover; background-position: center;">
         <div class="container">
             <div class="row min-vh-50 align-items-center">
-                <div class="col-lg-8 mx-auto text-center text-white">
+                <div class="col-lg-8 mx-auto text-center text-white" data-aos="fade-up">
                     <h1 class="display-4 fw-bold mb-4">Hubungi <span class="text-warning">Kami</span></h1>
                     <p class="lead mb-4">Kami siap membantu dan menjawab pertanyaan Anda tentang produk dan layanan kami.</p>
                 </div>
@@ -18,7 +18,7 @@
     <!-- CONTACT INFO -->
     <section class="py-5 bg-white">
         <div class="container">
-            <div class="row mb-5">
+            <div class="row mb-5" data-aos="fade-up">
                 <div class="col-12 text-center">
                     <span class="badge bg-danger rounded-pill px-3 py-2 mb-3">Informasi Kontak</span>
                     <h2 class="fw-bold mb-3 text-danger">Kami Siap Membantu Anda</h2>
@@ -27,7 +27,7 @@
             </div>
             
             <div class="row g-4">
-                <div class="col-lg-4 col-md-6">
+                <div class="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-delay="100">
                     <div class="card glass-card h-100 text-center p-4 contact-card">
                         <div class="icon-wrapper mb-3">
                             <div class="rounded-circle bg-danger bg-opacity-10 d-inline-flex align-items-center justify-content-center" 
@@ -44,7 +44,7 @@
                     </div>
                 </div>
                 
-                <div class="col-lg-4 col-md-6">
+                <div class="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-delay="200">
                     <div class="card glass-card h-100 text-center p-4 contact-card">
                         <div class="icon-wrapper mb-3">
                             <div class="rounded-circle bg-danger bg-opacity-10 d-inline-flex align-items-center justify-content-center" 
@@ -66,7 +66,7 @@
                     </div>
                 </div>
                 
-                <div class="col-lg-4 col-md-6">
+                <div class="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-delay="300">
                     <div class="card glass-card h-100 text-center p-4 contact-card">
                         <div class="icon-wrapper mb-3">
                             <div class="rounded-circle bg-danger bg-opacity-10 d-inline-flex align-items-center justify-content-center" 
@@ -102,7 +102,7 @@
         <div class="container">
             <div class="row g-5">
                 <!-- Contact Form -->
-                <div class="col-lg-6">
+                <div class="col-lg-6" data-aos="fade-right">
                     <div class="card border-0 shadow-sm p-4">
                         <h3 class="fw-bold text-danger mb-4">Kirim Pesan kepada Kami</h3>
                         
@@ -197,7 +197,7 @@
                 </div>
                 
                 <!-- Map & Hours -->
-                <div class="col-lg-6">
+                <div class="col-lg-6" data-aos="fade-left" data-aos-delay="200">
                     <!-- Map -->
                     <div class="card border-0 shadow-sm mb-4">
                         <div class="card-body p-0">

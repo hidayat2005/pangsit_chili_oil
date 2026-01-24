@@ -1,5 +1,5 @@
 @if(isset($products) && $products->count() > 0)
-<div class="row mb-5">
+<div class="row mb-5" data-aos="fade-up">
     <div class="col-12 text-center">
         @if(isset($title))
         <span class="badge bg-danger rounded-pill px-3 py-2 mb-3">{{ $title }}</span>

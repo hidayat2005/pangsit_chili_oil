@@ -1,5 +1,5 @@
 @if(!isset($noWrapper) || !$noWrapper)
-<div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+<div class="col-xl-3 col-lg-4 col-md-6 mb-4" data-aos="fade-up">
 @endif
     <div class="card product-card glass-card h-100">
         <!-- Badge Stok -->
@@ -19,7 +19,8 @@
                 @if($product->gambar)
                     <img src="{{ asset('storage/' . $product->gambar) }}" 
                          class="w-100 h-100 object-fit-cover" 
-                         alt="{{ $product->nama_produk }}">
+                         alt="{{ $product->nama_produk }}"
+                         loading="lazy">
                 @else
                     <div class="w-100 h-100 bg-danger bg-opacity-10 d-flex align-items-center justify-content-center">
                         <i class="fas fa-image fa-3x text-danger"></i>

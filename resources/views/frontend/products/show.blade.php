@@ -24,13 +24,14 @@
         <div class="container">
             <div class="row">
                 <!-- Product Image -->
-                <div class="col-lg-6 mb-4 mb-lg-0">
+                <div class="col-lg-6 mb-4 mb-lg-0" data-aos="fade-right">
                     <div class="card border-0 shadow-sm overflow-hidden rounded-3">
                         @if($product->gambar)
                             <img src="{{ asset('storage/' . $product->gambar) }}" 
                                  class="img-fluid w-100" 
                                  alt="{{ $product->nama_produk }}"
-                                 style="max-height: 500px; object-fit: cover;">
+                                 style="max-height: 500px; object-fit: cover;"
+                                 loading="lazy">
                         @else
                             <div class="bg-danger bg-opacity-10 d-flex align-items-center justify-content-center" style="height: 500px;">
                                 <i class="fas fa-image fa-5x text-danger opacity-50"></i>
@@ -40,7 +41,7 @@
                 </div>
 
                 <!-- Product Info -->
-                <div class="col-lg-6">
+                <div class="col-lg-6" data-aos="fade-left" data-aos-delay="200">
                     <div class="product-info">
                         <!-- Category Badge -->
                         @if($product->kategori)
@@ -159,7 +160,7 @@
     @if($relatedProducts->count() > 0)
     <section class="py-5 bg-light">
         <div class="container">
-            <div class="row mb-4">
+            <div class="row mb-4" data-aos="fade-up">
                 <div class="col-12">
                     <h3 class="fw-bold text-danger mb-0">Produk Terkait</h3>
                     <p class="text-muted">Produk lain yang mungkin Anda suka</p>

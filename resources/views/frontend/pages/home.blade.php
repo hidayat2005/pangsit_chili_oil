@@ -7,7 +7,7 @@
     <section class="hero-section" style="background: linear-gradient(rgba(74, 44, 42, 0.8), rgba(178, 34, 34, 0.7)), url('{{ asset('images/background.jpg') }}'); background-size: cover; background-position: center;">
         <div class="container">
             <div class="row align-items-center min-vh-80">
-                <div class="col-lg-6 text-white">
+                <div class="col-lg-6 text-white" data-aos="fade-right">
                     <h1 class="display-4 fw-bold mb-4">Pangsit Crispy dengan <span class="text-warning">Chili Oil Autentik</span></h1>
                     <p class="lead mb-4">Rasa yang menggugah selera, dibuat dengan bahan-bahan pilihan dan resep turun temurun.</p>
                     <div class="d-flex flex-wrap gap-3">
@@ -48,13 +48,14 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-6 mt-4 mt-lg-0">
+                <div class="col-lg-6 mt-4 mt-lg-0" data-aos="fade-left" data-aos-delay="200">
                     <div class="position-relative">
                         <div class="rounded-circle bg-warning mx-auto hero-image-circle" 
                              style="position: relative; overflow: hidden; border: 10px solid rgba(255,255,255,0.2);">
                             <img src="/images/background_dua.jpg" 
                                  alt="Pangsit Chili Oil" 
-                                 class="img-fluid rounded-circle w-100 h-100 object-fit-cover">
+                                 class="img-fluid rounded-circle w-100 h-100 object-fit-cover"
+                                 loading="lazy">
                         </div>
                     </div>
                 </div>
@@ -81,7 +82,7 @@
     <!-- FEATURED PRODUCTS -->
     <section id="produk" class="py-5 bg-light">
         <div class="container">
-            <div class="row mb-5">
+            <div class="row mb-5" data-aos="fade-up">
                 <div class="col-12 text-center">
                     <span class="badge bg-danger rounded-pill px-3 py-2 mb-3">Menu Unggulan</span>
                     <h2 class="fw-bold mb-3 text-danger">Produk Terlaris</h2>
@@ -137,7 +138,7 @@
     <!-- WHY CHOOSE US -->
     <section class="py-5 bg-white">
         <div class="container">
-            <div class="row mb-5">
+            <div class="row mb-5" data-aos="fade-up">
                 <div class="col-12 text-center">
                     <span class="badge bg-danger rounded-pill px-3 py-2 mb-3">Keunggulan</span>
                     <h2 class="fw-bold mb-3 text-danger">Mengapa Memilih Kami?</h2>
@@ -146,7 +147,7 @@
             </div>
             
             <div class="row g-4">
-                <div class="col-lg-3 col-md-6">
+                <div class="col-lg-3 col-md-6" data-aos="zoom-in" data-aos-delay="100">
                     <div class="card border-0 shadow-sm h-100 text-center p-4">
                         <div class="icon-wrapper mb-3">
                             <div class="rounded-circle bg-danger bg-opacity-10 d-inline-flex align-items-center justify-content-center" 
@@ -159,7 +160,7 @@
                     </div>
                 </div>
                 
-                <div class="col-lg-3 col-md-6">
+                <div class="col-lg-3 col-md-6" data-aos="zoom-in" data-aos-delay="200">
                     <div class="card border-0 shadow-sm h-100 text-center p-4">
                         <div class="icon-wrapper mb-3">
                             <div class="rounded-circle bg-danger bg-opacity-10 d-inline-flex align-items-center justify-content-center" 
@@ -172,7 +173,7 @@
                     </div>
                 </div>
                 
-                <div class="col-lg-3 col-md-6">
+                <div class="col-lg-3 col-md-6" data-aos="zoom-in" data-aos-delay="300">
                     <div class="card border-0 shadow-sm h-100 text-center p-4">
                         <div class="icon-wrapper mb-3">
                             <div class="rounded-circle bg-danger bg-opacity-10 d-inline-flex align-items-center justify-content-center" 
@@ -185,7 +186,7 @@
                     </div>
                 </div>
                 
-                <div class="col-lg-3 col-md-6">
+                <div class="col-lg-3 col-md-6" data-aos="zoom-in" data-aos-delay="400">
                     <div class="card border-0 shadow-sm h-100 text-center p-4">
                         <div class="icon-wrapper mb-3">
                             <div class="rounded-circle bg-danger bg-opacity-10 d-inline-flex align-items-center justify-content-center" 
@@ -204,7 +205,7 @@
     <!-- TESTIMONIALS -->
     <section class="py-5 bg-light-pattern">
         <div class="container">
-            <div class="row mb-5">
+            <div class="row mb-5" data-aos="fade-up">
                 <div class="col-12 text-center">
                     <span class="badge bg-danger rounded-pill px-3 py-2 mb-3">Testimoni</span>
                     <h2 class="fw-bold mb-3 text-danger">Apa Kata Pelanggan</h2>
@@ -304,14 +305,14 @@
     </section>
 
     <!-- CTA SECTION -->
-    <section class="py-5 bg-red-pattern text-white">
+    <section class="py-5 bg-red-pattern text-white" data-aos="fade-up">
         <div class="container">
             <div class="row align-items-center">
-                <div class="col-lg-8">
+                <div class="col-lg-8" data-aos="fade-right" data-aos-delay="100">
                     <h3 class="fw-bold mb-3">Siap Menikmati Pangsit Chili Oil Terbaik?</h3>
                     <p class="mb-0 opacity-75">Pesan sekarang dan dapatkan pengalaman kuliner yang tak terlupakan.</p>
                 </div>
-                <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
+                <div class="col-lg-4 text-lg-end mt-4 mt-lg-0" data-aos="fade-left" data-aos-delay="200">
                     <a href="{{ route('front.products') }}" class="btn glass-btn px-4 py-3">
                         <i class="fas fa-shopping-cart me-2"></i>Pesan Sekarang
                     </a>
