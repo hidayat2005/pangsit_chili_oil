@@ -489,7 +489,7 @@
             <a href="{{ route('admin.pengeluaran.index') }}" 
                class="sidebar-item {{ request()->routeIs('admin.pengeluaran*') ? 'active' : '' }}">
                 <i class="fas fa-wallet"></i>
-                <span>Pengeluaran Operasional</span>
+                <span>Pengeluaran</span>
             </a>
         </div>
 

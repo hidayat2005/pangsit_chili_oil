@@ -10,11 +10,17 @@ class PelangganController extends Controller
 {
     public function index()
     {
-        $pelanggans = Pelanggan::with('user')->latest()->paginate(10);
+        // Hanya tampilkan pelanggan yang memiliki user dengan role 'customer'
+        $pelanggans = Pelanggan::whereHas('user', function($query) {
+            $query->where('role', 'customer');
+        })->with('user')->latest()->paginate(10);
         
-        // Hitung statistik
-        $totalPelanggan = Pelanggan::count();
-        $pelangganAktif = Pelanggan::whereHas('user')->count();
+        // Hitung statistik khusus untuk customer
+        $totalPelanggan = Pelanggan::whereHas('user', function($query) {
+            $query->where('role', 'customer');
+        })->count();
+
+        $pelangganAktif = $totalPelanggan; // Karena whereHas sudah menjamin adanya user
         $totalPesanan = \App\Models\Pesanan::count();
 
         return view('admin.pelanggan.index', compact('pelanggans', 'totalPelanggan', 'pelangganAktif', 'totalPesanan'));

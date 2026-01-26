@@ -28,7 +28,7 @@
                                     <label class="form-label">Nama Lengkap</label>
                                     <input type="text" name="nama_lengkap" 
                                            class="form-control @error('nama_lengkap') is-invalid @enderror"
-                                           value="{{ old('nama_lengkap', $admin->nama_lengkap) }}">
+                                           value="{{ old('nama_lengkap', $admin->name) }}">
                                     @error('nama_lengkap')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror

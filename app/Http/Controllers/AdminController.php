@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Admin;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
@@ -25,7 +25,7 @@ public function dashboard()
      */
     public function index()
     {
-        $admins = Admin::all();
+        $admins = User::whereIn('role', ['admin', 'kasir'])->get();
 
         return view('admin.index', compact('admins'));
     }
@@ -46,8 +46,8 @@ public function dashboard()
         //validasi
         $request->validate([
             'nama_lengkap' => 'required|min:3',
-            'username' => 'required|unique:admins|min:3',
-            'email' => 'required|email|unique:admins',
+            'username' => 'required|unique:users|min:3',
+            'email' => 'required|email|unique:users',
             'password'=>'required|min:6',
             'nomor_telepon' => 'required',
             'role' => 'required|in:admin,kasir',
@@ -56,11 +56,11 @@ public function dashboard()
 
 
         //simpan database
-        Admin::create([
-            'nama_lengkap' => $request->nama_lengkap,
+        User::create([
+            'name' => $request->nama_lengkap,
             'username' => $request->username,
             'email' => $request->email,
-            'password' => bcrypt($request->password),
+            'password' => $request->password, // hashed in model cast
             'nomor_telepon' => $request->nomor_telepon,
             'role' => $request->role,
             'status' => $request->status
@@ -75,29 +75,32 @@ public function dashboard()
     /**
      * Display the specified resource.
      */
-    public function show(Admin $admin)
+    public function show(User $user)
     {
+        $admin = $user;
         return view('admin.show', compact('admin'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Admin $admin)
+    public function edit(User $user)
     {
+        $admin = $user;
         return view('admin.edit', compact('admin'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Admin $admin)
+    public function update(Request $request, User $user)
     {
+        $admin = $user;
         //validasi
         $request->validate([
            'nama_lengkap' => 'required|min:3',
-           'username' => 'required|unique:admins,username,' .$admin->id,
-           'email' => 'required|email|unique:admins,email,' .$admin->id,
+           'username' => 'required|unique:users,username,' .$admin->id,
+           'email' => 'required|email|unique:users,email,' .$admin->id,
            'nomor_telepon' => 'required',
            'role' => 'required|in:admin,kasir',
            'status' => 'required|in:aktif,nonaktif',
@@ -105,7 +108,7 @@ public function dashboard()
 
         //update data
         $admin->update([
-            'nama_lengkap' => $request->nama_lengkap,
+            'name' => $request->nama_lengkap,
             'username' => $request->username,
             'email' => $request->email,
             'nomor_telepon' => $request->nomor_telepon,
@@ -117,7 +120,7 @@ public function dashboard()
         if ($request->password) {
             //update password
             $admin->update([
-                'password' => bcrypt($request->password)
+                'password' => $request->password // hashed in model cast
             ]);
         }
 
@@ -129,9 +132,9 @@ public function dashboard()
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Admin $admin)
+    public function destroy(User $user)
     {
-        $admin->delete();
+        $user->delete();
 
         return redirect()->route('admin.index')
         ->with('success', 'Admin/Kasir berhasil dihapus');

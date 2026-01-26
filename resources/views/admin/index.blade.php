@@ -107,10 +107,10 @@
                                 <td>
                                     <div class="d-flex align-items-center gap-3">
                                         <div class="user-avatar text-uppercase bg-light text-primary fw-bold" style="width: 38px; height: 38px;">
-                                            {{ substr($admin->nama_lengkap, 0, 1) }}
+                                            {{ substr($admin->name, 0, 1) }}
                                         </div>
                                         <div>
-                                            <div class="fw-bold">{{ $admin->nama_lengkap }}</div>
+                                            <div class="fw-bold">{{ $admin->name }}</div>
                                             <small class="text-muted"><i class="fas fa-phone-alt me-1"></i> {{ $admin->nomor_telepon }}</small>
                                         </div>
                                     </div>

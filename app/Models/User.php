@@ -11,9 +11,12 @@ class User extends Authenticatable
 
     protected $fillable = [
         'name',
+        'username',
         'email',
         'password',
-        'role'
+        'nomor_telepon',
+        'role',
+        'status'
     ];
 
     protected $hidden = [
@@ -24,7 +27,8 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
-        'role' => 'string'
+        'role' => 'string',
+        'status' => 'string'
     ];
 
     // Relasi ke pelanggan

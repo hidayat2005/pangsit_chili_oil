@@ -18,7 +18,7 @@
             <!-- Header Profil -->
             <div class="card mb-3">
                 <div class="card-body">
-                    <h4 class="mb-2">{{ $admin->nama_lengkap }}</h4>
+                    <h4 class="mb-2">{{ $admin->name }}</h4>
                     <div class="d-flex align-items-center">
                         @if($admin->role == 'admin')
                             <span class="badge bg-danger me-2">Administrator</span>
@@ -98,7 +98,7 @@
                         </div>
                     </div>
                     
-                    <h5 class="mb-3">{{ $admin->nama_lengkap }}</h5>
+                    <h5 class="mb-3">{{ $admin->name }}</h5>
                     
                     <div class="mb-3">
                         @if($admin->role == 'admin')
