@@ -138,6 +138,13 @@ class ProdukController extends Controller
     // Hapus produk DENGAN MENGHAPUS GAMBAR
     public function destroy(Produk $produk)
     {
+        // VALIDASI: Cek apakah produk sudah pernah dipesan
+        if ($produk->itemPesanan()->count() > 0) {
+            return redirect()
+                ->back()
+                ->with('error', 'Produk tidak dapat dihapus karena sudah ada dalam pesanan. Total pesanan: ' . $produk->itemPesanan()->count());
+        }
+
         // Hapus gambar dari storage
         if ($produk->gambar && Storage::disk('public')->exists($produk->gambar)) {
             Storage::disk('public')->delete($produk->gambar);

@@ -27,7 +27,7 @@ public function dashboard()
     {
         $admins = User::whereIn('role', ['admin', 'kasir'])->get();
 
-        return view('admin.index', compact('admins'));
+        return view('admin.users.index', compact('admins'));
     }
 
     /**
@@ -35,7 +35,7 @@ public function dashboard()
      */
     public function create()
     {
-        return view('admin.create');
+        return view('admin.users.create');
     }
 
     /**
@@ -67,7 +67,7 @@ public function dashboard()
         ]);
 
         //redirect
-        return redirect()->route('admin.index')
+        return redirect()->route('admin.users.index')
         ->with('success', 'Admin/Kasir berhasil ditambahkan');
 
     }
@@ -78,7 +78,7 @@ public function dashboard()
     public function show(User $user)
     {
         $admin = $user;
-        return view('admin.show', compact('admin'));
+        return view('admin.users.show', compact('admin'));
     }
 
     /**
@@ -87,7 +87,7 @@ public function dashboard()
     public function edit(User $user)
     {
         $admin = $user;
-        return view('admin.edit', compact('admin'));
+        return view('admin.users.edit', compact('admin'));
     }
 
     /**
@@ -124,7 +124,7 @@ public function dashboard()
             ]);
         }
 
-        return redirect()->route('admin.index')
+        return redirect()->route('admin.users.index')
         ->with('success', 'Admin/Kasir berhasil diperbarui');
     }
 
@@ -136,7 +136,7 @@ public function dashboard()
     {
         $user->delete();
 
-        return redirect()->route('admin.index')
+        return redirect()->route('admin.users.index')
         ->with('success', 'Admin/Kasir berhasil dihapus');
     }
 }

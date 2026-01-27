@@ -15,7 +15,7 @@ class Pesanan extends Model
         'catatan', 'whatsapp_terkirim', 'whatsapp_terkirim_pada', 'admin_notified', 'customer_notified'
     ];
 
-    // ✅ CASTING UNTUK POSTGRESQL
+    //  CASTING UNTUK POSTGRESQL
     protected $casts = [
         'total_harga' => 'decimal:2',
         'whatsapp_terkirim' => 'boolean',
